@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AMPC Leadership Foundations · Module 3</title>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<title>AMPC Leadership Foundations · Module 3 · The Hard Conversation</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
+:root{
   --heading:'Libre Baskerville',Georgia,serif;
   --body:'Source Sans 3',-apple-system,sans-serif;
   --teal:#1B6B7D;--teal-dk:#0F4F5E;--teal-dp:#0A3A47;
@@ -16,208 +16,518 @@
   --light:#A8C0C8;--border:#D6E4E9;--off:#F7FAFB;
   --white:#FFF;--green:#2D8659;--green-bg:#EDF7F1;
   --red:#C4392A;--red-bg:#FDF2F0;--warm-grey:#F0EDEA;
+  --bar-h:64px;
 }
 *{margin:0;padding:0;box-sizing:border-box;font-family:var(--body)}
-::selection{background:#1B6B7D22}
-body{background:var(--off);min-height:100vh;overflow-x:hidden}
-button{cursor:pointer;transition:all 0.15s ease}
-button:hover:not(:disabled){filter:brightness(1.08);transform:translateY(-1px)}
+::selection{background:#1B6B7D33}
+html,body{height:100%;overflow:hidden}
+body{background:var(--off);color:var(--charcoal);
+  background-image:
+    radial-gradient(ellipse 60% 40% at 12% 0%, rgba(27,107,125,0.06), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 100% 100%, rgba(212,146,42,0.05), transparent 60%);
+}
+button{cursor:pointer;font-family:var(--body);transition:transform 0.15s ease,filter 0.15s ease,box-shadow 0.2s ease}
+button:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-1px)}
 button:active:not(:disabled){transform:translateY(0)}
-.screen{padding:28px 20px 36px;max-width:560px;margin:0 auto}
-.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:4px;margin-bottom:10px}
-h2.heading{font-size:clamp(20px,4vw,28px);font-weight:700;color:var(--charcoal);line-height:1.35;margin-bottom:14px;font-family:var(--heading)}
-h2.heading-sm{font-size:clamp(17px,3vw,22px);font-weight:700;color:var(--charcoal);line-height:1.35;margin-bottom:14px;font-family:var(--heading)}
-.btn{padding:12px 28px;border-radius:8px;font-size:15px;font-weight:700;border:none;letter-spacing:0.3px}
-.btn-primary{background:var(--teal);color:var(--white)}
-.btn-accent{background:var(--amber);color:var(--white)}
+
+/* ═══ APP SHELL ═══ */
+.app{position:fixed;inset:0;display:flex;flex-direction:column}
+.brand-bar{
+  height:var(--bar-h);flex-shrink:0;
+  background:linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.88));
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 28px;gap:24px;
+  box-shadow:0 1px 0 rgba(15,79,94,0.03), 0 8px 24px -16px rgba(15,79,94,0.18);
+  z-index:50;
+}
+.brand{display:flex;align-items:center;gap:14px}
+.brand-mark{position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center}
+.brand-mark svg{display:block}
+.brand-text{display:flex;flex-direction:column;line-height:1}
+.brand-text .name{font-family:var(--body);font-weight:700;font-size:26px;color:var(--teal-dp);letter-spacing:0.5px;line-height:1}
+.brand-text .sub{font-size:9px;color:var(--teal-dp);letter-spacing:1.8px;text-transform:uppercase;margin-top:5px;font-weight:600;opacity:0.75}
+.brand-divider{width:1px;height:32px;background:var(--border)}
+.module-info{display:flex;flex-direction:column;line-height:1.2}
+.module-info .label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--amber);font-weight:700}
+.module-info .title{font-family:var(--heading);font-weight:700;font-size:15px;color:var(--charcoal);margin-top:4px}
+.bar-spacer{flex:1}
+.progress-rail{display:flex;align-items:center;gap:6px}
+.progress-rail .dot{height:6px;border-radius:3px;transition:all 0.4s cubic-bezier(.4,0,.2,1);background:var(--border)}
+.progress-rail .dot.done{background:var(--teal)}
+.progress-rail .dot.active{background:var(--amber);box-shadow:0 0 0 3px rgba(212,146,42,0.18)}
+.bar-back{background:none;border:none;display:flex;align-items:center;gap:6px;color:var(--teal);font-size:12px;font-weight:600;letter-spacing:0.5px;padding:6px 10px;border-radius:6px}
+.bar-back:hover{background:var(--teal-pale)}
+.bar-back svg{display:block}
+
+.stage{flex:1;position:relative;overflow:hidden}
+.screen-panel{position:absolute;inset:0;display:none;overflow:hidden}
+.screen-panel.active{display:flex}
+.screen{width:100%;height:100%;display:flex;padding:32px 56px}
+
+/* Two-column landscape grid */
+.grid-2{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;width:100%;height:100%;align-items:center}
+.grid-2.center{align-items:center}
+.grid-2.right-narrow{grid-template-columns:1.2fr 0.85fr}
+.grid-1{display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%;height:100%;text-align:center;padding:0 8%}
+
+.tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:5px 11px;border-radius:4px;margin-bottom:12px}
+h1.hero{font-size:clamp(38px,4.6vw,64px);font-weight:700;color:var(--charcoal);line-height:1.08;font-family:var(--heading);letter-spacing:-0.5px}
+h2.heading{font-size:clamp(26px,2.6vw,38px);font-weight:700;color:var(--charcoal);line-height:1.18;font-family:var(--heading);letter-spacing:-0.3px}
+h2.heading-sm{font-size:clamp(20px,1.8vw,26px);font-weight:700;color:var(--charcoal);line-height:1.25;font-family:var(--heading)}
+.lede{font-size:clamp(16px,1.25vw,19px);color:var(--mid);line-height:1.65;max-width:48ch}
+
+.btn{padding:13px 30px;border-radius:8px;font-size:15px;font-weight:700;border:none;letter-spacing:0.3px;display:inline-flex;align-items:center;gap:8px}
+.btn-primary{background:var(--teal);color:var(--white);box-shadow:0 4px 14px -4px rgba(15,79,94,0.4)}
+.btn-primary:hover:not(:disabled){box-shadow:0 8px 24px -6px rgba(15,79,94,0.5)}
+.btn-accent{background:var(--amber);color:var(--white);box-shadow:0 4px 14px -4px rgba(212,146,42,0.45)}
+.btn-accent:hover:not(:disabled){box-shadow:0 8px 24px -6px rgba(212,146,42,0.55)}
 .btn-secondary{background:transparent;color:var(--teal);border:2px solid var(--teal)}
+.btn-ghost{background:var(--warm-grey);color:var(--slate);border:none}
 .btn:disabled{opacity:0.4;cursor:default}
-.top-bar{background:#FFFFFFee;backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50}
-.progress-dots{display:flex;gap:4px}
-.dot{height:8px;border-radius:4px;transition:all 0.3s}
-.footer{text-align:center;padding:16px;border-top:1px solid var(--border)}
-.footer span{font-size:11px;color:var(--light);letter-spacing:1px}
-.screen-panel{display:none}
-.screen-panel.active{display:block}
 
 /* Animations */
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-@keyframes slideIn{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
-@keyframes popIn{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
-@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
-@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(212,146,42,0)}50%{box-shadow:0 0 20px 4px rgba(212,146,42,0.25)}}
-@keyframes bounceIn{0%{transform:scale(0)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
-@keyframes countPop{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
-.fade-in{animation:fadeUp 0.5s ease forwards}
-.slide-in{animation:slideIn 0.4s ease forwards}
-.pop-in{animation:popIn 0.3s ease forwards}
-.shake{animation:shake 0.4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes fadeRight{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+@keyframes fadeLeft{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+@keyframes popIn{from{opacity:0;transform:scale(0.86)}to{opacity:1;transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.55}}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(212,146,42,0)}50%{box-shadow:0 0 22px 5px rgba(212,146,42,0.28)}}
+@keyframes bounceIn{0%{transform:scale(0)}55%{transform:scale(1.18)}100%{transform:scale(1)}}
+@keyframes spinSlow{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(8px,-6px)}}
+@keyframes ringPulse{0%{box-shadow:0 0 0 0 rgba(27,107,125,0.45)}100%{box-shadow:0 0 0 28px rgba(27,107,125,0)}}
+.fade-in{animation:fadeUp 0.55s cubic-bezier(.22,.61,.36,1) forwards}
+.fade-right{animation:fadeRight 0.5s ease forwards}
+.fade-left{animation:fadeLeft 0.5s ease forwards}
+.pop-in{animation:popIn 0.35s ease forwards}
+.shake{animation:shake 0.45s ease}
 .pulse-text{animation:pulse 1s ease infinite}
-.glow{animation:glow 1.5s ease infinite}
-.bounce-in{animation:bounceIn 0.4s ease forwards}
-.count-pop{animation:countPop 0.3s ease}
+.glow{animation:glow 1.6s ease infinite}
+.bounce-in{animation:bounceIn 0.5s ease forwards}
 
-/* Perspective card */
-.perspective-card{position:relative;transition:transform 0.6s ease;transform-style:preserve-3d}
-.perspective-card.flipped{transform:rotateY(180deg)}
-.perspective-front,.perspective-back{backface-visibility:hidden;border-radius:10px;padding:16px}
-.perspective-back{transform:rotateY(180deg);position:absolute;top:0;left:0;width:100%;height:100%}
+/* Cold open hero */
+.hero-stage{position:relative;width:100%;height:100%;display:grid;grid-template-columns:1.1fr 0.9fr;align-items:center;gap:48px}
+.hero-copy{padding-left:24px;max-width:680px}
+.hero-copy .meta{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.hero-copy .meta .pill{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--amber);padding:6px 12px;background:rgba(212,146,42,0.1);border-radius:20px}
+.hero-copy .meta .module{font-size:12px;color:var(--mid);letter-spacing:1.5px;text-transform:uppercase;font-weight:600}
+.hero-copy .lede{margin-top:22px;font-size:clamp(17px,1.35vw,21px);color:var(--slate);line-height:1.6;max-width:54ch}
+.hero-copy .runtime{display:inline-flex;align-items:center;gap:8px;color:var(--mid);font-size:13px;margin-top:18px;padding:6px 12px;background:var(--white);border:1px solid var(--border);border-radius:20px}
+.hero-cta{margin-top:28px;display:flex;gap:12px;align-items:center}
+
+.hero-mark{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.hero-mark .ring{position:absolute;border:1px solid rgba(27,107,125,0.12);border-radius:50%}
+.hero-mark .r1{width:78%;aspect-ratio:1;animation:spinSlow 90s linear infinite}
+.hero-mark .r2{width:58%;aspect-ratio:1;animation:spinSlow 60s linear infinite reverse;border-style:dashed}
+.hero-mark .r3{width:38%;aspect-ratio:1;animation:spinSlow 40s linear infinite}
+.hero-mark .stack{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:18px;animation:drift 6s ease-in-out infinite}
+.hero-mark .big-mark{display:flex;align-items:center;justify-content:center}
+.hero-mark .big-mark svg{display:block}
+.hero-mark .word{font-family:var(--body);font-weight:700;font-size:80px;letter-spacing:1px;color:var(--teal-dp);line-height:1}
+.hero-mark .tagline{font-size:11px;letter-spacing:3px;color:var(--teal-dp);text-transform:uppercase;font-weight:600;opacity:0.75;margin-top:-4px}
+
+/* Scene cards (screen 1) */
+.scene-illustration{position:relative;width:100%;height:min(70vh,580px);border-radius:18px;background:linear-gradient(135deg,#0F4F5E,#1B6B7D 60%,#238FA6);overflow:hidden;box-shadow:0 30px 60px -24px rgba(15,79,94,0.5)}
+.scene-illustration::before,.scene-illustration::after{content:'';position:absolute;border-radius:50%}
+.scene-illustration::before{width:60%;aspect-ratio:1;top:-20%;right:-15%;background:radial-gradient(circle,rgba(212,146,42,0.18),transparent 70%)}
+.scene-illustration::after{width:80%;aspect-ratio:1;bottom:-30%;left:-25%;background:radial-gradient(circle,rgba(255,255,255,0.08),transparent 70%)}
+.scene-illustration .scene-label{position:absolute;top:24px;left:24px;color:var(--white);opacity:0.7;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:700;display:flex;align-items:center;gap:8px}
+.scene-illustration .scene-label::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--amber);animation:pulse 2s ease infinite}
+.scene-illustration .quote{position:absolute;bottom:28px;left:28px;right:28px;color:var(--white);font-family:var(--heading);font-size:clamp(15px,1.15vw,18px);font-style:italic;line-height:1.5;opacity:0.92}
+.scene-illustration .checklist-card{position:absolute;top:64px;left:28px;right:28px;bottom:130px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.16);border-radius:12px;padding:22px 24px;backdrop-filter:blur(6px);display:flex;flex-direction:column;gap:14px;transform:rotate(-1.2deg);box-shadow:0 20px 40px -16px rgba(0,0,0,0.4)}
+.scene-illustration .checklist-header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid rgba(255,255,255,0.18);padding-bottom:10px}
+.scene-illustration .checklist-title{font-family:var(--heading);font-size:clamp(15px,1.2vw,19px);font-weight:700;color:var(--white);letter-spacing:0.3px}
+.scene-illustration .checklist-meta{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.55);font-weight:600}
+.scene-illustration .checklist-items{display:flex;flex-direction:column;gap:8px;flex:1;justify-content:center}
+.scene-illustration .cl-row{display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.78);font-size:clamp(12px,1vw,14px);font-weight:500}
+.scene-illustration .cl-box{width:14px;height:14px;border:1.5px solid rgba(255,255,255,0.45);border-radius:3px;flex-shrink:0}
+.scene-illustration .skipped-stamp{position:absolute;top:96px;right:14px;transform:rotate(-6deg);background:transparent;border:2.5px solid #F0B056;color:#F8C77A;padding:7px 16px;border-radius:4px;font-size:12px;font-weight:800;letter-spacing:2px;font-family:var(--heading);box-shadow:0 0 0 1px rgba(240,176,86,0.25) inset;opacity:0.95;text-shadow:0 1px 4px rgba(0,0,0,0.2)}
+
+.scene-text-card{padding:18px 22px;border-radius:12px;background:var(--white);border:1px solid var(--border);margin-bottom:14px;box-shadow:0 4px 14px -8px rgba(15,79,94,0.18)}
+.scene-text-card.warm{background:var(--amber-pale);border-color:var(--amber-lt)}
+.scene-text-card.warm{border-left:4px solid var(--amber)}
+.scene-text-card.cool{border-left:4px solid var(--teal)}
+.scene-text-card p{font-size:clamp(15px,1.05vw,17px);line-height:1.7;color:var(--slate)}
+
+/* Choice grid */
+.choice-grid{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:14px;width:100%;height:100%;padding:20px 0}
+.choice-grid-tall{grid-auto-rows:1fr}
+.choice-card{padding:22px 24px;border-radius:14px;border:2px solid var(--border);background:var(--white);cursor:pointer;transition:all 0.25s cubic-bezier(.22,.61,.36,1);display:flex;flex-direction:column;gap:14px;align-items:flex-start;text-align:left;min-height:160px}
+.choice-card:hover:not(.revealed){border-color:var(--teal-lt);transform:translateY(-3px);box-shadow:0 12px 28px -10px rgba(27,107,125,0.25)}
+.choice-card .ico-wrap{width:52px;height:52px;border-radius:13px;background:var(--teal-pale);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.25s}
+.choice-card .ico-wrap svg{display:block}
+.choice-card .label{font-size:17px;font-weight:700;color:var(--charcoal);margin-bottom:6px;line-height:1.3;font-family:var(--heading)}
+.choice-card .sub{font-size:14px;color:var(--mid);line-height:1.6}
+
+/* Insight panel */
+.insight{padding:20px 22px;background:var(--white);border:1px solid var(--border);border-left:4px solid var(--teal);border-radius:12px;box-shadow:0 12px 32px -16px rgba(15,79,94,0.25)}
+
+/* Bridge screen */
+.bridge-stage{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;width:100%;max-width:920px;margin:0 auto}
+
+/* Framework carousel */
+.fw-shell{display:grid;grid-template-rows:auto 1fr auto;width:100%;height:100%;gap:18px}
+.fw-letters{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.fw-letter{position:relative;padding:14px 16px;border-radius:14px;background:var(--white);border:1px solid var(--border);display:flex;align-items:center;gap:14px;transition:all 0.4s cubic-bezier(.22,.61,.36,1);cursor:pointer;overflow:hidden}
+.fw-letter.active{transform:translateY(-3px);box-shadow:0 16px 36px -16px rgba(15,79,94,0.35)}
+.fw-letter.done{opacity:0.85}
+.fw-letter .l-mark{width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--heading);font-size:24px;font-weight:800;color:var(--white);background:var(--mid);transition:background 0.3s}
+.fw-letter.active .l-mark,.fw-letter.done .l-mark{background:var(--c)}
+.fw-letter .l-text .step{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mid);font-weight:600}
+.fw-letter .l-text .word{font-family:var(--heading);font-size:20px;font-weight:700;color:var(--charcoal);line-height:1.1;margin-top:2px}
+.fw-letter.done::after{content:'✓';position:absolute;top:8px;right:10px;color:var(--green);font-weight:700;font-size:14px}
+
+.fw-body{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;overflow-y:auto;padding-right:6px}
+.fw-body::-webkit-scrollbar{width:6px}
+.fw-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.fw-col{display:flex;flex-direction:column;gap:12px}
+.fw-headline{display:flex;align-items:flex-start;gap:14px;margin-bottom:6px}
+.fw-headline .principle{font-size:clamp(18px,1.55vw,22px);font-weight:700;color:var(--charcoal);font-family:var(--heading);line-height:1.3}
+
+.reveal-card{padding:14px 16px;border-radius:10px;background:var(--white);border:2px dashed var(--border);text-align:center;cursor:pointer;transition:all 0.2s}
+.reveal-card.bad{border-color:var(--red);color:var(--red)}
+.reveal-card.good{border-color:var(--green);color:var(--green)}
+.reveal-card.why{border-color:var(--amber);color:var(--amber)}
+.reveal-card.locked{opacity:0.35;cursor:default}
+.reveal-card .rc-text{font-size:13px;font-weight:700;letter-spacing:0.3px}
+
+.quote-card{padding:14px 16px;border-radius:10px;border-left:4px solid;animation:fadeUp 0.4s ease}
+.quote-card.bad{background:var(--red-bg);border-color:var(--red)}
+.quote-card.good{background:var(--green-bg);border-color:var(--green)}
+.quote-card.why{background:var(--warm-grey);border-color:var(--amber)}
+.quote-card .qc-label{font-size:10.5px;font-weight:700;letter-spacing:1.5px;margin-bottom:4px}
+.quote-card.bad .qc-label{color:var(--red)}
+.quote-card.good .qc-label{color:var(--green)}
+.quote-card.why .qc-label{color:var(--amber)}
+.quote-card .qc-body{font-size:14.5px;color:var(--slate);font-style:italic;line-height:1.55}
+.quote-card.why .qc-body{font-style:normal}
+
+.dave-card{padding:11px 14px;border-radius:10px;border:1px dashed;display:flex;gap:10px;align-items:flex-start;animation:fadeUp 0.4s ease}
+.dave-card.bad{background:#FDF2F0;border-color:var(--red)}
+.dave-card.good{background:#EDF7F1;border-color:var(--green)}
+.dave-card .dc-label{font-size:10px;font-weight:700;letter-spacing:1px;white-space:nowrap;display:flex;align-items:center;gap:5px;margin-top:2px}
+.dave-card.bad .dc-label{color:var(--red)}
+.dave-card.good .dc-label{color:var(--green)}
+.dave-card .dc-body{font-size:13px;color:var(--slate);font-style:italic;line-height:1.5}
+
+.fw-foot{display:flex;justify-content:space-between;align-items:center}
+
+/* Order race */
+.order-shell{display:grid;grid-template-columns:1.1fr 0.9fr;gap:36px;width:100%;height:100%;align-items:start;padding-top:6px}
+.order-left{display:flex;flex-direction:column;gap:14px;height:100%}
+.order-slots{display:flex;flex-direction:column;gap:10px;flex:1}
+.order-slot{padding:14px 16px;border-radius:12px;min-height:62px;display:flex;align-items:center;gap:14px;transition:all 0.25s;background:var(--white)}
+.order-slot.empty{border:2px dashed var(--border)}
+.order-slot.filled{border:2px solid;cursor:pointer}
+.order-slot .num{width:34px;height:34px;border-radius:9px;background:var(--border);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;font-family:var(--heading);flex-shrink:0}
+.order-slot.filled .num{background:var(--c);color:var(--white)}
+.order-slot .ol-text{font-size:16px;font-weight:600;color:var(--charcoal)}
+.order-slot.empty .ol-text{font-style:italic;color:var(--light)}
+.order-slot.correct{border-color:var(--green);background:var(--green-bg)}
+.order-slot.correct .num{background:var(--green)}
+.order-slot.wrong{border-color:var(--red);background:var(--red-bg)}
+.order-slot.wrong .num{background:var(--red)}
+
+.order-right{display:flex;flex-direction:column;gap:18px;padding:24px;background:var(--white);border-radius:16px;border:1px solid var(--border);height:100%}
+.order-right h3{font-family:var(--heading);font-size:20px;color:var(--charcoal);margin-bottom:4px}
+.order-right .timer-row{display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--warm-grey);border-radius:10px}
+.order-right .timer-row .t-num{font-size:30px;font-weight:800;color:var(--amber);font-variant-numeric:tabular-nums;font-family:var(--heading)}
+.pool{display:flex;flex-wrap:wrap;gap:10px;min-height:48px}
+.pool-chip{padding:11px 22px;border-radius:24px;color:var(--white);font-size:14.5px;font-weight:700;cursor:grab;letter-spacing:0.3px;transition:transform 0.2s,box-shadow 0.2s;box-shadow:0 6px 18px -8px rgba(0,0,0,0.3);user-select:none;touch-action:none}
+.pool-chip:hover{transform:scale(1.06)}
+.pool-chip.dragging{cursor:grabbing;position:fixed;z-index:9999;pointer-events:none;transform:scale(1.08);box-shadow:0 18px 40px -12px rgba(0,0,0,0.4);transition:none}
+.order-slot.drop-target{border-style:solid;border-color:var(--teal);background:#1B6B7D0d;transform:scale(1.01)}
+
+/* Live scenario */
+.sc-shell{display:grid;grid-template-columns:0.95fr 1.05fr;gap:36px;width:100%;height:100%;align-items:start}
+.sc-left{display:flex;flex-direction:column;gap:14px;padding:24px;border-radius:16px;background:linear-gradient(160deg,#0A3A47,#0F4F5E 60%,#1B6B7D);color:var(--white);position:relative;overflow:hidden;box-shadow:0 30px 60px -24px rgba(15,79,94,0.5)}
+.sc-left::before{content:'';position:absolute;width:60%;aspect-ratio:1;top:-30%;right:-20%;border-radius:50%;background:radial-gradient(circle,rgba(212,146,42,0.18),transparent 70%);pointer-events:none}
+.sc-left .sc-meta{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);font-weight:700}
+.sc-left .sc-meta::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--amber);animation:pulse 2s ease infinite}
+.sc-left .sc-scene{font-family:var(--heading);font-size:18px;color:rgba(255,255,255,0.85);margin-top:4px}
+.sc-left .sc-text{font-size:clamp(15px,1.1vw,17px);line-height:1.7;color:rgba(255,255,255,0.95);margin-top:14px}
+.sc-left .sc-prompt{margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,0.12)}
+.sc-left .sc-prompt-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--amber);font-weight:700;margin-bottom:6px}
+.sc-left .sc-prompt-text{font-family:var(--heading);font-size:clamp(20px,1.6vw,26px);font-weight:700;line-height:1.35;color:var(--white)}
+
+.sc-right{display:flex;flex-direction:column;gap:12px;height:100%}
+.sc-timer{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--white);border:1px solid var(--border);border-radius:10px}
+.sc-timer-bar{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.sc-timer-bar-fill{height:100%;width:100%;background:var(--teal);transition:width 1s linear,background 0.3s}
+.sc-timer-num{font-size:18px;font-weight:800;color:var(--mid);font-variant-numeric:tabular-nums;font-family:var(--heading);min-width:40px;text-align:right}
+
+.sc-options{display:flex;flex-direction:column;gap:10px;flex:1}
+.sc-opt{padding:14px 16px;border-radius:12px;border:2px solid var(--border);background:var(--white);cursor:pointer;transition:all 0.22s}
+.sc-opt:hover:not(.revealed){border-color:var(--teal-lt);transform:translateX(4px);box-shadow:0 8px 20px -10px rgba(27,107,125,0.25)}
+.sc-opt.revealed{cursor:default}
+.sc-opt-row{display:flex;gap:12px;align-items:center}
+.sc-opt-ico{width:38px;height:38px;border-radius:10px;background:var(--teal-pale);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sc-opt-text{font-size:15.5px;font-weight:600;color:var(--charcoal);line-height:1.4}
+.sc-opt-fb{margin-top:8px;padding-left:50px;font-size:14px;line-height:1.6;color:var(--slate)}
+
+/* Debrief */
+.debrief-shell{display:grid;grid-template-columns:1fr 1.1fr;gap:36px;width:100%;height:100%}
+.db-left{display:flex;flex-direction:column;gap:18px;justify-content:center}
+.db-right{display:flex;flex-direction:column;gap:14px;justify-content:center;overflow-y:auto}
+.score-orb{width:140px;height:140px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:48px;font-weight:800;color:var(--white);font-family:var(--heading);box-shadow:0 20px 40px -16px rgba(0,0,0,0.3);margin-bottom:8px}
+.profile-card{padding:18px 20px;background:var(--warm-grey);border-radius:12px;border-left:4px solid}
+.framework-recap{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.fr-cell{text-align:center;padding:14px 6px;border-radius:10px;border:1px solid}
+.fr-cell .l{font-size:30px;font-weight:800;font-family:var(--heading);line-height:1}
+.fr-cell .w{font-size:11px;font-weight:700;color:var(--slate);margin-top:4px;letter-spacing:0.5px}
+.task-card{padding:18px 20px;background:var(--teal-wash);border:1px solid var(--border);border-radius:12px}
+.task-list{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;margin-top:10px}
+.task-item{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--slate)}
+.task-num{width:20px;height:20px;border-radius:50%;border:2px solid var(--teal);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--teal);flex-shrink:0}
+
+/* Up next */
+.next-shell{display:grid;grid-template-columns:1fr 1fr;gap:48px;width:100%;height:100%;align-items:center;padding:0 4%}
+.completion-orb{width:100px;height:100px;border-radius:50%;background:var(--green);color:var(--white);display:flex;align-items:center;justify-content:center;animation:ringPulse 2s ease-out infinite}
+.next-card{padding:32px;background:linear-gradient(135deg,var(--teal-dp),var(--teal-dk),var(--teal));border-radius:20px;color:var(--white);box-shadow:0 30px 60px -24px rgba(15,79,94,0.55);position:relative;overflow:hidden}
+.next-card::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;top:-150px;right:-100px;background:radial-gradient(circle,rgba(212,146,42,0.25),transparent 70%)}
+.next-card .nc-label{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;opacity:0.6;font-weight:700;position:relative}
+.next-card h3{font-family:var(--heading);font-size:32px;line-height:1.2;margin-top:10px;position:relative}
+.next-card p{font-size:15px;opacity:0.85;margin-top:10px;line-height:1.6;position:relative}
 
 /* Danger overlay */
-.danger-overlay{position:fixed;inset:0;pointer-events:none;transition:background 2s ease;z-index:40}
+.danger-overlay{position:fixed;inset:0;pointer-events:none;transition:background 1s ease;z-index:30}
 
-/* Pool chip hover */
-.pool-chip{padding:10px 20px;border-radius:24px;color:var(--white);font-size:14px;font-weight:700;cursor:pointer;display:inline-block;margin:0 8px 8px 0;letter-spacing:0.3px;transition:all 0.2s}
-.pool-chip:hover{transform:scale(1.06)}
-
-/* Option card hover */
-.opt-card{padding:14px 16px;border-radius:10px;border:2px solid var(--border);background:var(--white);cursor:pointer;transition:all 0.25s;margin-bottom:8px}
-.opt-card:hover:not(.revealed){border-color:var(--teal-lt);transform:translateX(4px)}
+/* Footer credit */
+.shell-footer{position:absolute;bottom:10px;right:24px;font-size:10px;color:var(--light);letter-spacing:1.5px;z-index:5;font-weight:600}
 </style>
 </head>
 <body>
 
 <div class="danger-overlay" id="dangerOverlay"></div>
 
-<div class="top-bar">
-  <div style="display:flex;align-items:center;gap:8px">
-    <button id="backBtn" onclick="goBack()" style="display:none;background:none;border:none;padding:4px;margin-right:4px;color:var(--teal);cursor:pointer;transition:all 0.15s">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+<div class="app">
+  <!-- ═══ BRAND BAR ═══ -->
+  <div class="brand-bar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg width="44" height="44" viewBox="0 0 60 60" fill="none" stroke="#0F4F5E" stroke-width="3" stroke-linejoin="miter">
+          <polygon points="30,2 58,30 30,58 2,30"/>
+          <polygon points="30,11 49,30 30,49 11,30"/>
+          <polygon points="30,20 40,30 30,40 20,30"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="name">AMPC</span>
+      </div>
+    </div>
+    <div class="brand-divider"></div>
+    <div class="module-info">
+      <span class="label">Module 03</span>
+      <span class="title">The Hard Conversation</span>
+    </div>
+    <button id="backBtn" class="bar-back" onclick="goBack()" style="display:none">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
     </button>
-    <svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect x="14" y="2" width="15" height="15" rx="2" transform="rotate(45 14 2)" stroke="#1B6B7D" stroke-width="2" fill="none"/><rect x="14" y="7" width="9" height="9" rx="1" transform="rotate(45 14 7)" stroke="#1B6B7D" stroke-width="1.5" fill="none"/></svg>
-    <span style="font-size:12px;font-weight:700;color:var(--teal);letter-spacing:1.5px">AMPC</span>
-    <span style="color:var(--light);font-size:12px">·</span>
-    <span style="font-size:12px;color:var(--mid)">Leadership Foundations</span>
+    <div class="bar-spacer"></div>
+    <div class="progress-rail" id="progressDots"></div>
   </div>
-  <div class="progress-dots" id="progressDots"></div>
-</div>
 
-<!-- ═══ SCREEN 0: COLD OPEN ═══ -->
-<div class="screen-panel active" id="screen0">
-<div class="screen">
-  <div style="min-height:65vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
-    <div id="open1" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease">
-      <div class="tag" style="color:var(--amber);background:#D4922A14">Leadership Foundations · Module 3</div>
-      <h1 style="font-size:clamp(26px,5.5vw,38px);font-weight:700;color:var(--charcoal);line-height:1.25;max-width:460px;font-family:var(--heading);margin-top:8px">The Hard Conversation</h1>
-    </div>
-    <div id="open2" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease">
-      <p style="font-size:17px;color:var(--mid);margin-top:16px;max-width:400px;line-height:1.65">There's a conversation you've been avoiding. You know the one. It's been sitting there for weeks.</p>
-      <p style="font-size:15px;color:var(--mid);margin-top:8px;max-width:400px;line-height:1.6">This module teaches you how to have it — clearly, kindly, and without destroying the relationship.</p>
-    </div>
-    <div id="open3" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease">
-      <div style="margin-top:28px;display:flex;flex-direction:column;align-items:center;gap:10px">
-        <button class="btn btn-primary" onclick="goScreen(1)">Start the module →</button>
-        <div style="display:flex;align-items:center;gap:6px;color:var(--light);font-size:12px">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--light)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          <span>≈ 5 minutes · interactive</span>
+  <!-- ═══ STAGE ═══ -->
+  <div class="stage">
+
+  <!-- ═══ SCREEN 0: COLD OPEN ═══ -->
+  <div class="screen-panel active" id="screen0">
+    <div class="screen">
+      <div class="hero-stage">
+        <div class="hero-copy">
+          <div id="open1" style="opacity:0;transform:translateY(14px);transition:all 0.7s ease">
+            <div class="meta">
+              <span class="pill">Module 03</span>
+              <span class="module">Leadership Foundations · 5 mins</span>
+            </div>
+            <h1 class="hero">The hard<br>conversation.</h1>
+          </div>
+          <div id="open2" style="opacity:0;transform:translateY(14px);transition:all 0.7s ease">
+            <p class="lede">There's a conversation you've been avoiding. You know the one. It's been sitting there for weeks. This module teaches you how to have it — clearly, kindly, and without destroying the relationship.</p>
+          </div>
+          <div id="open3" style="opacity:0;transform:translateY(14px);transition:all 0.7s ease" class="hero-cta">
+            <button class="btn btn-primary" onclick="goScreen(1)">Start the module
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+            <span class="runtime">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              ≈ 5 minutes · interactive
+            </span>
+          </div>
+        </div>
+        <div class="hero-mark">
+          <div class="ring r1"></div>
+          <div class="ring r2"></div>
+          <div class="ring r3"></div>
+          <div class="stack">
+            <div class="big-mark">
+              <svg width="160" height="160" viewBox="0 0 60 60" fill="none" stroke="#0F4F5E" stroke-width="2.4" stroke-linejoin="miter">
+                <polygon points="30,2 58,30 30,58 2,30"/>
+                <polygon points="30,11 49,30 30,49 11,30"/>
+                <polygon points="30,20 40,30 30,40 20,30"/>
+              </svg>
+            </div>
+            <div class="word">AMPC</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-</div>
 
-<!-- ═══ SCREEN 1: SCENE SETUP ═══ -->
-<div class="screen-panel" id="screen1">
-<div class="screen">
-  <div style="min-height:60vh;display:flex;flex-direction:column;justify-content:center">
-    <div class="tag" style="color:var(--teal);background:#1B6B7D14">Leadership Check-In</div>
-    <h2 class="heading" style="margin-bottom:20px">Before we teach you anything — let's see what you'd actually do.</h2>
-    <div style="padding:18px 20px;background:var(--warm-grey);border-radius:10px;margin-bottom:20px;border-left:3px solid var(--teal)">
-      <p style="font-size:16px;line-height:1.8;color:var(--slate);margin:0">You're the WHS coordinator at a mid-sized beef plant. Over the past two weeks, you've watched a shift supervisor — well-liked, been here 12 years — consistently skip the pre-start safety check on the boning line.</p>
-    </div>
-    <div style="padding:18px 20px;background:var(--amber-pale);border-radius:10px;margin-bottom:24px;border-left:3px solid var(--amber)">
-      <p style="font-size:16px;line-height:1.8;color:var(--slate);margin:0">Other workers have started copying him. You know you need to say something. But he's respected. He's been here longer than you. And the last person who challenged him got the cold shoulder for weeks.</p>
-    </div>
-    <div id="scene1Btn" style="opacity:0;transform:translateY(8px);transition:all 0.5s ease;text-align:center">
-      <p style="font-size:15px;color:var(--mid);margin-bottom:14px;font-style:italic">It's Tuesday morning. You see him skip the check again.</p>
-      <button class="btn btn-primary" onclick="goScreen(1.5)">What do you do? →</button>
-    </div>
-  </div>
-</div>
-</div>
-
-<!-- ═══ SCREEN 1.5: THE CHOICE ═══ -->
-<div class="screen-panel" id="screen1b">
-<div class="screen">
-  <div class="tag" style="color:var(--teal);background:#1B6B7D14">Leadership Check-In</div>
-  <div style="font-size:13px;color:var(--mid);margin-bottom:6px">Tuesday morning · Boning room floor</div>
-  <h2 class="heading">He's just skipped the check again. The team is watching. What do you do?</h2>
-  <p style="font-size:14px;color:var(--mid);margin-bottom:16px">Be honest — pick what you'd <em>actually</em> do, not what you think you should do.</p>
-  <div id="instinctGrid" style="display:flex;flex-direction:column;gap:8px"></div>
-  <div id="instinctResult" style="display:none"></div>
-</div>
-</div>
-
-<!-- ═══ SCREEN 1.75: THE BRIDGE ═══ -->
-<div class="screen-panel" id="screen1c">
-<div class="screen">
-  <div style="min-height:55vh;display:flex;flex-direction:column;justify-content:center;text-align:center">
-    <div id="bridge1" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease">
-      <p style="font-size:clamp(20px,4vw,28px);font-weight:700;color:var(--charcoal);line-height:1.35;font-family:var(--heading);max-width:440px;margin:0 auto">Every option either avoided the conversation — or had it badly.</p>
-    </div>
-    <div id="bridge2" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease">
-      <p style="font-size:17px;color:var(--mid);margin-top:20px;line-height:1.65;max-width:400px;margin-left:auto;margin-right:auto">Avoiding it lets the risk grow. Hinting wastes your authority. Blurting destroys the relationship. Documenting turns a conversation into a case.</p>
-    </div>
-    <div id="bridge3" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease">
-      <p style="font-size:20px;font-weight:700;color:var(--amber);margin-top:24px;font-family:var(--heading)">There's a better way. It's called OBAN.</p>
-    </div>
-    <div id="bridge4" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease">
-      <div style="margin-top:24px"><button class="btn btn-primary" onclick="goScreen(2)">Show me →</button></div>
-    </div>
-  </div>
-</div>
-</div>
-
-<!-- ═══ SCREEN 2: FRAMEWORK CAROUSEL ═══ -->
-<div class="screen-panel" id="screen2"><div class="screen"><div id="fwSlide"></div></div></div>
-
-<!-- ═══ SCREEN 3: ORDER RACE ═══ -->
-<div class="screen-panel" id="screen3"><div class="screen"><div id="orderContent"></div></div></div>
-
-<!-- ═══ SCREEN 4: LIVE SCENARIO ═══ -->
-<div class="screen-panel" id="screen4"><div class="screen"><div id="scenarioContent"></div></div></div>
-
-<!-- ═══ SCREEN 5: DEBRIEF ═══ -->
-<div class="screen-panel" id="screen5"><div class="screen" id="debriefContent"></div></div>
-
-<!-- ═══ SCREEN 6: UP NEXT ═══ -->
-<div class="screen-panel" id="screen6">
-<div class="screen">
-  <div style="min-height:65vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
-    <div id="nx1" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease">
-      <div style="width:56px;height:56px;border-radius:50%;background:var(--green);color:var(--white);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      </div>
-      <div class="tag" style="color:var(--green);background:#2D865914">Module 3 Complete</div>
-      <h2 style="font-size:clamp(22px,4.5vw,32px);font-weight:700;color:var(--charcoal);line-height:1.25;font-family:var(--heading);margin-top:8px;max-width:400px">You now have a framework for saying the hard thing well.</h2>
-    </div>
-    <div id="nx2" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease">
-      <p style="font-size:15px;color:var(--mid);margin-top:16px;line-height:1.65;max-width:380px">The skill isn't in knowing OBAN. It's in using it when your heart rate is up and someone's looking at you waiting for an answer.</p>
-      <p style="font-size:14px;color:var(--mid);margin-top:10px;max-width:380px">That's what the plant task is for. One real conversation before the next session.</p>
-    </div>
-    <div id="nx3" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease;margin-top:28px;width:100%;max-width:420px">
-      <div style="padding:20px;background:linear-gradient(135deg,var(--teal-dp),var(--teal-dk));border-radius:12px;color:var(--white);text-align:center">
-        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;opacity:0.5;margin-bottom:8px">Up Next</div>
-        <div style="font-size:22px;font-weight:700;font-family:var(--heading);line-height:1.3">Module 4:<br>Leading Across Shifts</div>
-        <div style="font-size:14px;opacity:0.7;margin-top:8px;line-height:1.5">How to build influence with people you rarely see, on timelines you don't control.</div>
-        <div style="margin-top:16px">
-          <button class="btn" style="background:var(--amber);color:var(--white);padding:12px 32px" onclick="alert('This is a preview — Module 4 would launch here in the full programme.')">Start Module 4 →</button>
+  <!-- ═══ SCREEN 1: SCENE SETUP ═══ -->
+  <div class="screen-panel" id="screen1">
+    <div class="screen">
+      <div class="grid-2 right-narrow">
+        <div class="fade-right">
+          <div class="scene-illustration">
+            <div class="scene-label">Tuesday · 6:14am · Boning room</div>
+            <div class="checklist-card">
+              <div class="checklist-header">
+                <div class="checklist-title">Pre-Start Safety Check</div>
+                <div class="checklist-meta">Boning Line · Shift A</div>
+              </div>
+              <div class="checklist-items">
+                <div class="cl-row"><div class="cl-box"></div><span>Blade guard inspection</span></div>
+                <div class="cl-row"><div class="cl-box"></div><span>Lockout / tagout verified</span></div>
+                <div class="cl-row"><div class="cl-box"></div><span>PPE check — full team</span></div>
+                <div class="cl-row"><div class="cl-box"></div><span>Conveyor e-stop test</span></div>
+                <div class="cl-row"><div class="cl-box"></div><span>Floor clear of debris</span></div>
+              </div>
+              <div class="skipped-stamp">SKIPPED · 3rd time this week</div>
+            </div>
+            <div class="quote">"Other workers have started copying him. You know you need to say something. But he's been here longer than you."</div>
+          </div>
+        </div>
+        <div class="fade-left">
+          <div class="tag" style="color:var(--teal);background:#1B6B7D14">Leadership Check-In</div>
+          <h2 class="heading" style="margin-bottom:18px">Before we teach you anything — let's see what you'd actually do.</h2>
+          <div class="scene-text-card cool">
+            <p>You're the WHS coordinator at a mid-sized beef plant. Over the past two weeks, you've watched a shift supervisor — well-liked, been here 12 years — consistently skip the pre-start safety check on the boning line.</p>
+          </div>
+          <div class="scene-text-card warm">
+            <p>The last person who challenged him got the cold shoulder for weeks.</p>
+          </div>
+          <div id="scene1Btn" style="opacity:0;transform:translateY(8px);transition:all 0.5s ease;margin-top:18px">
+            <p style="font-size:14.5px;color:var(--mid);margin-bottom:14px;font-style:italic">It's Tuesday morning. You see him skip the check again.</p>
+            <button class="btn btn-primary" onclick="goScreen(1.5)">What do you do?
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
-    <div id="nx4" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease;margin-top:20px">
-      <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
-        <button class="btn btn-secondary" style="padding:8px 18px;font-size:13px" onclick="restartAll()">Replay Module 3</button>
-        <button class="btn" style="padding:8px 18px;font-size:13px;background:var(--warm-grey);color:var(--slate);border:none" onclick="goScreen(0)">Back to start</button>
+  </div>
+
+  <!-- ═══ SCREEN 1.5: THE CHOICE ═══ -->
+  <div class="screen-panel" id="screen1b">
+    <div class="screen">
+      <div class="grid-2 right-narrow" style="align-items:stretch">
+        <div style="display:flex;flex-direction:column;justify-content:center;padding:20px 0">
+          <div class="tag" style="color:var(--teal);background:#1B6B7D14">Leadership Check-In</div>
+          <div style="font-size:12px;color:var(--mid);margin-bottom:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600">Tuesday morning · Boning room floor</div>
+          <h2 class="heading" style="margin-bottom:18px">He's just skipped the check again. The team is watching.</h2>
+          <p style="font-size:clamp(16px,1.2vw,18px);color:var(--mid);line-height:1.65;max-width:46ch">Be honest — pick what you'd <em>actually</em> do, not what you think you should do. There's no right answer here, just useful self-knowledge.</p>
+          <div id="instinctResult" style="display:none;margin-top:24px"></div>
+        </div>
+        <div class="choice-grid choice-grid-tall" id="instinctGrid"></div>
       </div>
     </div>
   </div>
-</div>
-</div>
 
-<div class="footer"><span>Delivered by ThinkShow × Kula Learn</span></div>
+  <!-- ═══ SCREEN 1.75: THE BRIDGE ═══ -->
+  <div class="screen-panel" id="screen1c">
+    <div class="screen">
+      <div class="grid-1">
+        <div class="bridge-stage">
+          <div id="bridge1" style="opacity:0;transform:translateY(14px);transition:all 0.7s ease">
+            <p style="font-size:clamp(28px,3.2vw,46px);font-weight:700;color:var(--charcoal);line-height:1.18;font-family:var(--heading);letter-spacing:-0.5px">Every option either avoided the conversation — or had it badly.</p>
+          </div>
+          <div id="bridge2" style="opacity:0;transform:translateY(14px);transition:all 0.7s ease">
+            <p style="font-size:clamp(17px,1.35vw,21px);color:var(--mid);margin-top:24px;line-height:1.65;max-width:62ch">Avoiding it lets the risk grow. Hinting wastes your authority. Blurting destroys the relationship. Documenting turns a conversation into a case.</p>
+          </div>
+          <div id="bridge3" style="opacity:0;transform:translateY(14px);transition:all 0.7s ease">
+            <p style="font-size:clamp(22px,2vw,28px);font-weight:700;color:var(--amber);margin-top:30px;font-family:var(--heading);letter-spacing:0.5px">There's a better way. It's called <span style="border-bottom:3px solid var(--amber);padding-bottom:2px">OBAN</span>.</p>
+          </div>
+          <div id="bridge4" style="opacity:0;transform:translateY(14px);transition:all 0.7s ease">
+            <div style="margin-top:32px"><button class="btn btn-primary" onclick="goScreen(2)">Show me how
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 2: FRAMEWORK ═══ -->
+  <div class="screen-panel" id="screen2">
+    <div class="screen">
+      <div id="fwSlide" style="width:100%;height:100%"></div>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 3: ORDER RACE ═══ -->
+  <div class="screen-panel" id="screen3">
+    <div class="screen">
+      <div id="orderContent" style="width:100%;height:100%"></div>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 4: LIVE SCENARIO ═══ -->
+  <div class="screen-panel" id="screen4">
+    <div class="screen">
+      <div id="scenarioContent" style="width:100%;height:100%"></div>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 5: DEBRIEF ═══ -->
+  <div class="screen-panel" id="screen5">
+    <div class="screen">
+      <div id="debriefContent" style="width:100%;height:100%"></div>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 6: UP NEXT ═══ -->
+  <div class="screen-panel" id="screen6">
+    <div class="screen">
+      <div class="next-shell">
+        <div id="nx1" style="opacity:0;transform:translateY(14px);transition:all 0.7s ease">
+          <div class="completion-orb" style="margin-bottom:20px">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="tag" style="color:var(--green);background:#2D865914">Module 03 Complete</div>
+          <h2 style="font-size:clamp(28px,2.8vw,42px);font-weight:700;color:var(--charcoal);line-height:1.2;font-family:var(--heading);margin-top:10px;max-width:14ch;letter-spacing:-0.4px">You now have a framework for saying the hard thing well.</h2>
+          <div id="nx2" style="opacity:0;transform:translateY(14px);transition:all 0.7s ease;margin-top:18px">
+            <p style="font-size:clamp(16px,1.2vw,18px);color:var(--mid);line-height:1.65;max-width:48ch">The skill isn't in <em>knowing</em> OBAN. It's in <em>using</em> it when your heart rate is up and someone's looking at you waiting for an answer. That's what the plant task is for. One real conversation before the next session.</p>
+          </div>
+          <div id="nx4" style="opacity:0;transform:translateY(14px);transition:all 0.7s ease;margin-top:24px">
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn btn-secondary" style="padding:10px 20px;font-size:13.5px" onclick="restartAll()">Replay Module 3</button>
+              <button class="btn btn-ghost" style="padding:10px 20px;font-size:13.5px" onclick="goScreen(0)">Back to start</button>
+            </div>
+          </div>
+        </div>
+        <div id="nx3" style="opacity:0;transform:translateY(14px);transition:all 0.7s ease">
+          <div class="next-card">
+            <div class="nc-label">Up next</div>
+            <h3>Module 04:<br>Leading Across Shifts</h3>
+            <p>How to build influence with people you rarely see, on timelines you don't control.</p>
+            <div style="margin-top:24px;position:relative">
+              <button class="btn btn-accent" onclick="alert('This is a preview — Module 4 would launch here in the full programme.')">Start Module 04
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+  <div class="shell-footer">DELIVERED BY THINKSHOW × KULA LEARN</div>
+</div>
 
 <script>
 // ═══ STATE ═══
@@ -236,6 +546,7 @@ let scenarioPicked = null;
 let scenarioChoices = [];
 let timerInterval = null;
 let timerValue = 0;
+let screenHistory = [0];
 
 // ═══ ICONS ═══
 function ico(type,size=24,color='#1B6B7D'){
@@ -254,6 +565,7 @@ function ico(type,size=24,color='#1B6B7D'){
     shrug:`<svg ${a}><circle cx="12" cy="7" r="4"/><path d="M5.5 21c-.5-3.5 1-6 3-7"/><path d="M18.5 21c.5-3.5-1-6-3-7"/><path d="M9 14h6"/></svg>`,
     clock:`<svg ${a}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
     flip:`<svg ${a}><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>`,
+    ear:`<svg ${a}><path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10a3.5 3.5 0 1 1-7 0"/><path d="M15 8.5a2.5 2.5 0 0 0-5 0v1a2 2 0 1 1 0 4"/></svg>`,
   })[type]||'';
 }
 
@@ -277,18 +589,32 @@ const orderLabels = {observe:'Observe',bridge:'Bridge',ask:'Ask',next:'Next Step
 const orderColors = {observe:'#1B6B7D',bridge:'#2A8A9E',ask:'#D4922A',next:'#2D8659'};
 
 const scenarios = [
-  {scene:'Monday 6:20am · Boning room',text:"A team leader pulls you aside. Friday afternoon, a pallet shifted off a forklift — nobody hit, but two workers were standing there 30 seconds earlier. No report filed. She says:",prompt:'"Can we sort this quietly? He\'s a good bloke. Nobody got hurt."',time:15,
+  {scene:'Monday 6:20am · Boning room',text:"A team leader pulls you aside. Friday afternoon, a pallet shifted off a forklift — nobody hit, but two workers were standing there 30 seconds earlier. No report filed.",prompt:'"Can we sort this quietly? He\'s a good bloke. Nobody got hurt."',time:15,
     options:[
       {id:'agree',icon:'handshake',text:"Sure — let's keep it between us",type:'bad',fb:"You've told her loyalty beats safety. Next time, she won't report at all."},
       {id:'escalate',icon:'clipboard',text:'I have to report this immediately',type:'partial',fb:"Right instinct, wrong delivery. She trusted you enough to come forward — respond like a policy machine and she won't come to you again."},
       {id:'oban',icon:'chat',text:"I hear you. I do have to follow this up — but it won't be about blame.",type:'strong',fb:"OBAN in action. You've acknowledged her concern, committed to the process, and protected the relationship. She'll come to you again."},
     ]},
-  {scene:"Thursday · Plant manager's office",text:"Your investigation found the real cause: throughput targets went up 15%. Drivers use the old stacking method because the new SOP is too slow at pace. The plant manager asks:",prompt:'"So — training issue or a people issue?"',time:20,
+  {scene:"Thursday · Plant manager's office",text:"Your investigation found the real cause: throughput targets went up 15%. Drivers use the old stacking method because the new SOP is too slow at pace.",prompt:'"So — training issue or a people issue?"',time:20,
     options:[
       {id:'training',icon:'book',text:'Training issue — they need a refresher',type:'bad',fb:"You'll retrain drivers, tick a box, and nothing changes — the root cause is pace, not knowledge."},
       {id:'people',icon:'user',text:'People issue — he cut corners',type:'bad',fb:"You've thrown the driver under the bus for doing what every driver does. The real cause stays hidden."},
       {id:'system',icon:'cog',text:"Neither — it's a systems issue. The target makes the safe method unworkable.",type:'strong',fb:"This takes courage. You're telling the plant manager the operating conditions they set are part of the risk. This is what WHS leadership looks like."},
       {id:'both',icon:'shrug',text:'A bit of both — retrain and monitor',type:'partial',fb:"Feels diplomatic but it's a dodge. Everyone leaves without addressing the actual cause."},
+    ]},
+  {scene:"Tuesday · Lunchroom",text:"A long-tenured boner quietly tells you he's been hiding a sore wrist for three weeks because he can't afford reduced hours. He says two others on the line are doing the same.",prompt:'"Just don\'t put it in writing — I\'ll lose the shifts."',time:18,
+    options:[
+      {id:'offrec',icon:'handshake',text:"Off the record — let's get you patched up",type:'bad',fb:"You've created a parallel system. Next time someone is hurt worse, they'll hide it too — because that's what you signed off on."},
+      {id:'policy',icon:'clipboard',text:'Concealing injuries is a serious breach. I have to escalate.',type:'bad',fb:"Factually right, delivered like a policy machine. The next ten people on the line just watched what happens when you tell the truth."},
+      {id:'oban2',icon:'chat',text:"I hear you. We'll work out a path that protects your hours and gets you treated — and I do need to record it.",type:'strong',fb:"OBAN under pressure. You acknowledged the fear, named the constraint, and held the line on the report. He'll come to you next time too."},
+      {id:'delay',icon:'clock',text:'Take the rest of the shift, sleep on it, we\'ll talk tomorrow',type:'partial',fb:"Kind, but you've delayed the decision and the injury keeps going. He'll be back tomorrow with the same answer — and one more day on the wrist."},
+    ]},
+  {scene:"Friday · After toolbox",text:"A new line worker pulls you aside. She says a senior leading hand has been shouting at workers when the line slows. Two people quit this month. She doesn't want to be named.",prompt:'"If you say anything, he\'ll know it was me. Just please watch him."',time:18,
+    options:[
+      {id:'watch',icon:'shrug',text:"Got it — I'll keep an eye out",type:'bad',fb:"Kind on the surface, but you've made it her problem to bring evidence next time. Nothing changes and she's still exposed."},
+      {id:'names',icon:'clipboard',text:'I need names and dates if I\'m going to act',type:'bad',fb:"You've turned a person taking a risk into a witness statement. She won't come back — and neither will the next one."},
+      {id:'oban3',icon:'ear',text:"I won't name you. I will watch — and I'll go to him with what I see, not what you said.",type:'strong',fb:"OBAN done right. You've protected her, kept your word, and made the next move yours — based on observation, not hearsay."},
+      {id:'general',icon:'hint',text:"I'll mention it to him generally, no names",type:'partial',fb:"He'll know exactly who. The behaviour gets sharper and now she's the target."},
     ]},
 ];
 
@@ -297,26 +623,29 @@ const screenOrder = [0,1,1.5,1.75,2,3,4,5,6];
 function updateDots(){
   const d=document.getElementById('progressDots');d.innerHTML='';
   const idx=screenOrder.indexOf(currentScreen);
-  screenOrder.forEach((_,i)=>{const dot=document.createElement('div');dot.className='dot';dot.style.width=(i===idx?'20px':'8px');dot.style.background=i<idx?'var(--teal)':i===idx?'var(--amber)':'var(--border)';d.appendChild(dot)});
+  screenOrder.forEach((_,i)=>{
+    const dot=document.createElement('div');dot.className='dot';
+    dot.style.width=(i===idx?'22px':'8px');
+    if(i<idx)dot.classList.add('done');
+    else if(i===idx)dot.classList.add('active');
+    d.appendChild(dot);
+  });
 }
-
-let screenHistory = [0];
 
 function goBack(){
   if(screenHistory.length<=1)return;
   screenHistory.pop();
   const prev=screenHistory[screenHistory.length-1];
-  // Go to prev screen without pushing to history
   document.querySelectorAll('.screen-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById({1.5:'screen1b',1.75:'screen1c'}[prev]||('screen'+prev)).classList.add('active');
-  currentScreen=prev;updateDots();updateBackBtn();window.scrollTo({top:0});
+  currentScreen=prev;updateDots();updateBackBtn();
   document.getElementById('dangerOverlay').style.background='transparent';
   clearInterval(timerInterval);
 }
 
 function updateBackBtn(){
   const btn=document.getElementById('backBtn');
-  if(btn)btn.style.display=screenHistory.length>1?'block':'none';
+  if(btn)btn.style.display=screenHistory.length>1?'flex':'none';
 }
 
 function goScreen(n){
@@ -324,23 +653,23 @@ function goScreen(n){
   document.getElementById({1.5:'screen1b',1.75:'screen1c'}[n]||('screen'+n)).classList.add('active');
   currentScreen=n;
   screenHistory.push(n);
-  updateDots();updateBackBtn();window.scrollTo({top:0});
+  updateDots();updateBackBtn();
   document.getElementById('dangerOverlay').style.background='transparent';
   clearInterval(timerInterval);
-  if(n===1)setTimeout(()=>{const b=document.getElementById('scene1Btn');if(b){b.style.opacity='1';b.style.transform='none'}},1200);
+  if(n===1)setTimeout(()=>{const b=document.getElementById('scene1Btn');if(b){b.style.opacity='1';b.style.transform='none'}},1000);
   if(n===1.5)renderInstinct();
-  if(n===1.75){[['bridge1',300],['bridge2',1500],['bridge3',3000],['bridge4',4000]].forEach(([id,d])=>setTimeout(()=>{const e=document.getElementById(id);if(e){e.style.opacity='1';e.style.transform='none'}},d))}
+  if(n===1.75){[['bridge1',300],['bridge2',1500],['bridge3',2900],['bridge4',3900]].forEach(([id,d])=>setTimeout(()=>{const e=document.getElementById(id);if(e){e.style.opacity='1';e.style.transform='none'}},d))}
   if(n===2){fwSlideIdx=0;fwReveals={};renderFwSlide()}
   if(n===3)renderOrder();
   if(n===4)renderScenario();
   if(n===5)renderDebrief();
-  if(n===6){[['nx1',300],['nx2',1200],['nx3',2200],['nx4',3200]].forEach(([id,d])=>setTimeout(()=>{const e=document.getElementById(id);if(e){e.style.opacity='1';e.style.transform='none'}},d))}
+  if(n===6){[['nx1',300],['nx2',1300],['nx3',1800],['nx4',2600]].forEach(([id,d])=>setTimeout(()=>{const e=document.getElementById(id);if(e){e.style.opacity='1';e.style.transform='none'}},d))}
 }
 
 // ═══ SCREEN 0: COLD OPEN ═══
 setTimeout(()=>{document.getElementById('open1').style.opacity='1';document.getElementById('open1').style.transform='none'},400);
-setTimeout(()=>{document.getElementById('open2').style.opacity='1';document.getElementById('open2').style.transform='none'},1800);
-setTimeout(()=>{document.getElementById('open3').style.opacity='1';document.getElementById('open3').style.transform='none'},3400);
+setTimeout(()=>{document.getElementById('open2').style.opacity='1';document.getElementById('open2').style.transform='none'},1500);
+setTimeout(()=>{document.getElementById('open3').style.opacity='1';document.getElementById('open3').style.transform='none'},2700);
 
 // ═══ SCREEN 1.5: INSTINCT CHECK ═══
 function renderInstinct(){
@@ -348,13 +677,12 @@ function renderInstinct(){
   instincts.forEach((o,i)=>{
     const card=document.createElement('div');
     const active=instinctPicked===o.id;const faded=instinctPicked&&!active;
-    card.className='opt-card'+(instinctPicked?' revealed':'');
-    card.style.cssText=`border-color:${active?o.color:'var(--border)'};background:${active?o.color+'0c':'var(--white)'};opacity:${faded?'0.35':'1'};transform:${faded?'scale(0.98)':'scale(1)'};animation-delay:${i*0.08}s`;
+    card.className='choice-card'+(instinctPicked?' revealed':'');
+    card.style.cssText=`border-color:${active?o.color:'var(--border)'};background:${active?o.color+'0c':'var(--white)'};opacity:${faded?'0.35':'1'};transform:${faded?'scale(0.97)':'scale(1)'};animation-delay:${i*0.08}s`;
     if(!instinctPicked)card.style.animation=`fadeUp 0.4s ease ${i*0.08}s both`;
-    card.innerHTML=`<div style="display:flex;gap:12px;align-items:center">
-      <div style="width:36px;height:36px;border-radius:10px;background:${active?o.color+'18':'var(--teal-pale)'};display:flex;align-items:center;justify-content:center;flex-shrink:0">${ico(o.icon,20,active?o.color:'#6E868F')}</div>
-      <div><div style="font-size:15px;font-weight:700;color:var(--charcoal)">${o.label}</div><div style="font-size:13px;color:var(--mid);margin-top:2px">${o.sub}</div></div>
-    </div>`;
+    card.innerHTML=`
+      <div class="ico-wrap" style="background:${active?o.color+'1a':'var(--teal-pale)'}">${ico(o.icon,22,active?o.color:'#6E868F')}</div>
+      <div><div class="label">${o.label}</div><div class="sub">${o.sub}</div></div>`;
     if(!instinctPicked)card.onclick=()=>{instinctPicked=o.id;renderInstinct();setTimeout(showInstinctResult,400)};
     grid.appendChild(card);
   });
@@ -364,109 +692,140 @@ function renderInstinct(){
 function showInstinctResult(){
   const o=instincts.find(i=>i.id===instinctPicked);
   const el=document.getElementById('instinctResult');el.style.display='block';
-  el.innerHTML=`<div class="fade-in" style="margin-top:16px;padding:16px;background:var(--teal-wash);border:1px solid var(--border);border-radius:10px">
-    <div style="display:flex;gap:10px;align-items:flex-start">
-      <div style="width:32px;height:32px;border-radius:8px;background:${o.color}14;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px">${ico(o.icon,18,o.color)}</div>
-      <div><div style="font-size:13px;font-weight:700;color:${o.color};margin-bottom:4px">${o.pattern}</div>
-      <p style="font-size:15px;line-height:1.7;color:var(--slate);margin:0">${o.insight}</p></div>
+  el.innerHTML=`<div class="fade-in insight" style="border-left-color:${o.color}">
+    <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px">
+      <div style="width:36px;height:36px;border-radius:9px;background:${o.color}1a;display:flex;align-items:center;justify-content:center;flex-shrink:0">${ico(o.icon,20,o.color)}</div>
+      <div><div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:${o.color};font-weight:700">Your default pattern</div>
+      <div style="font-family:var(--heading);font-size:22px;color:var(--charcoal);font-weight:700;margin-top:2px">${o.pattern}</div></div>
     </div>
-  </div>
-  <div style="margin-top:16px;text-align:center"><button class="btn btn-primary" onclick="goScreen(1.75)">Continue →</button></div>`;
+    <p style="font-size:14.5px;line-height:1.7;color:var(--slate);margin:0">${o.insight}</p>
+    <div style="margin-top:18px"><button class="btn btn-primary" onclick="goScreen(1.75)">Continue
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button></div>
+  </div>`;
 }
 
-// ═══ SCREEN 2: FRAMEWORK CAROUSEL WITH PERSPECTIVE FLIP ═══
+// ═══ SCREEN 2: FRAMEWORK ═══
 function renderFwSlide(){
-  const c=document.getElementById('fwSlide');const s=fwSteps[fwSlideIdx];
-  const r=fwReveals[fwSlideIdx]||{};const allDone=r.bad&&r.good&&r.why;
+  const c=document.getElementById('fwSlide');
+  const s=fwSteps[fwSlideIdx];
+  const r=fwReveals[fwSlideIdx]||{};
+  const allDone=r.bad&&r.good&&r.why;
 
-  let pips='<div style="display:flex;gap:6px;margin-bottom:20px">';
-  fwSteps.forEach((st,i)=>{pips+=`<div style="flex:1;height:4px;border-radius:2px;background:${i<=fwSlideIdx?st.color:'var(--border)'};opacity:${i===fwSlideIdx?1:i<fwSlideIdx?0.5:0.3};transition:all 0.3s"></div>`});
-  pips+='</div>';
+  let h='<div class="fw-shell">';
 
-  let h=pips;
-  h+=`<div class="tag" style="color:${s.color};background:${s.color}14">Step ${fwSlideIdx+1} of 4</div>`;
-  h+=`<div class="slide-in" style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
-    <div style="width:56px;height:56px;border-radius:14px;background:${s.color};display:flex;align-items:center;justify-content:center;flex-shrink:0">
-      <span style="font-size:30px;font-weight:800;color:var(--white);font-family:var(--heading)">${s.letter}</span>
-    </div>
-    <div><h2 style="font-size:clamp(22px,4vw,30px);font-weight:700;color:var(--charcoal);line-height:1.2;font-family:var(--heading);margin:0">${s.word}</h2>
-    <p style="font-size:15px;color:var(--mid);margin:4px 0 0">${s.front}</p></div>
-  </div>`;
-  h+=`<p style="font-size:16px;font-weight:600;color:var(--slate);margin-bottom:20px;line-height:1.6">${s.principle}</p>`;
+  // OBAN letters header (always visible)
+  h+='<div class="fw-letters">';
+  fwSteps.forEach((st,i)=>{
+    const cls=i===fwSlideIdx?'active':(i<fwSlideIdx?'done':'');
+    const canJump=i<=fwSlideIdx;
+    h+=`<div class="fw-letter ${cls}" style="--c:${st.color}" ${canJump?`onclick="jumpFw(${i})"`:''}>
+      <div class="l-mark">${st.letter}</div>
+      <div class="l-text"><div class="step">Step ${i+1}</div><div class="word">${st.word}</div></div>
+    </div>`;
+  });
+  h+='</div>';
+
+  // Body — two columns
+  h+='<div class="fw-body">';
+
+  // Left col: principle + reveals
+  h+='<div class="fw-col">';
+  h+=`<div class="fw-headline"><div style="width:48px;height:48px;border-radius:12px;background:${s.color};display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--heading);font-size:26px;font-weight:800;color:#FFF">${s.letter}</div>
+    <div><div class="tag" style="color:${s.color};background:${s.color}14;margin-bottom:6px">${s.front}</div>
+    <div class="principle">${s.principle}</div></div></div>`;
 
   // Reveal 1: Bad
   if(!r.bad){
-    h+=`<div onclick="revealFw('bad')" class="glow" style="padding:14px 16px;border-radius:10px;border:2px dashed var(--red);background:var(--white);cursor:pointer;text-align:center;margin-bottom:10px">
-      <div style="font-size:14px;font-weight:700;color:var(--red)">Tap to see what NOT to say ↓</div></div>`;
+    h+=`<div onclick="revealFw('bad')" class="reveal-card bad glow"><div class="rc-text">↓ Tap to see what NOT to say</div></div>`;
   } else {
-    h+=`<div class="slide-in" style="padding:12px 14px;border-radius:10px;background:var(--red-bg);border-left:3px solid var(--red);margin-bottom:10px">
-      <div style="font-size:11px;font-weight:700;color:var(--red);letter-spacing:1px;margin-bottom:3px">✗ NOT THIS</div>
-      <div style="font-size:15px;color:var(--slate);font-style:italic">${s.bad}</div>
-    </div>`;
-    // Dave hears (bad) — perspective flip
-    if(s.daveHears) h+=`<div class="slide-in" style="padding:10px 14px;border-radius:8px;background:#FDF2F0;border:1px dashed var(--red);margin-bottom:14px;display:flex;gap:8px;align-items:flex-start">
-      <div style="font-size:11px;font-weight:700;color:var(--red);white-space:nowrap;margin-top:2px">${ico('flip',14,'#C4392A')} DAVE HEARS:</div>
-      <div style="font-size:13px;color:var(--slate);font-style:italic;line-height:1.5">${s.daveHears.bad}</div>
-    </div>`;
+    h+=`<div class="quote-card bad"><div class="qc-label">✗ NOT THIS</div><div class="qc-body">${s.bad}</div></div>`;
+    if(s.daveHears) h+=`<div class="dave-card bad"><div class="dc-label">${ico('flip',12,'#C4392A')} DAVE HEARS</div><div class="dc-body">${s.daveHears.bad}</div></div>`;
   }
 
   // Reveal 2: Good
   if(!r.bad){
-    h+=`<div style="padding:14px 16px;border-radius:10px;border:2px dashed var(--border);background:var(--white);text-align:center;margin-bottom:10px;opacity:0.35"><div style="font-size:14px;color:var(--light)">Reveal the bad example first</div></div>`;
+    h+=`<div class="reveal-card locked"><div class="rc-text" style="color:var(--light)">Reveal the bad example first</div></div>`;
   } else if(!r.good){
-    h+=`<div onclick="revealFw('good')" class="glow" style="padding:14px 16px;border-radius:10px;border:2px dashed var(--green);background:var(--white);cursor:pointer;text-align:center;margin-bottom:10px">
-      <div style="font-size:14px;font-weight:700;color:var(--green)">Now tap to see the better version ↓</div></div>`;
+    h+=`<div onclick="revealFw('good')" class="reveal-card good glow"><div class="rc-text">↓ Now tap for the better version</div></div>`;
   } else {
-    h+=`<div class="slide-in" style="padding:12px 14px;border-radius:10px;background:var(--green-bg);border-left:3px solid var(--green);margin-bottom:10px">
-      <div style="font-size:11px;font-weight:700;color:var(--green);letter-spacing:1px;margin-bottom:3px">✓ THIS</div>
-      <div style="font-size:15px;color:var(--slate);font-style:italic">${s.good}</div>
-    </div>`;
-    if(s.daveHears) h+=`<div class="slide-in" style="padding:10px 14px;border-radius:8px;background:#EDF7F1;border:1px dashed var(--green);margin-bottom:14px;display:flex;gap:8px;align-items:flex-start">
-      <div style="font-size:11px;font-weight:700;color:var(--green);white-space:nowrap;margin-top:2px">${ico('flip',14,'#2D8659')} DAVE HEARS:</div>
-      <div style="font-size:13px;color:var(--slate);font-style:italic;line-height:1.5">${s.daveHears.good}</div>
-    </div>`;
+    h+=`<div class="quote-card good"><div class="qc-label">✓ THIS</div><div class="qc-body">${s.good}</div></div>`;
+    if(s.daveHears) h+=`<div class="dave-card good"><div class="dc-label">${ico('flip',12,'#2D8659')} DAVE HEARS</div><div class="dc-body">${s.daveHears.good}</div></div>`;
   }
+  h+='</div>';
 
-  // Reveal 3: Why
+  // Right col: why it matters
+  h+='<div class="fw-col" style="justify-content:center;height:100%">';
   if(!r.good){
-    h+=`<div style="padding:14px 16px;border-radius:10px;border:2px dashed var(--border);background:var(--white);text-align:center;opacity:0.35"><div style="font-size:14px;color:var(--light)">Keep going</div></div>`;
+    h+=`<div class="reveal-card locked" style="height:100%;display:flex;align-items:center;justify-content:center"><div class="rc-text" style="color:var(--light)">Keep going to unlock the principle behind ${s.word}</div></div>`;
   } else if(!r.why){
-    h+=`<div onclick="revealFw('why')" class="glow" style="padding:14px 16px;border-radius:10px;border:2px dashed var(--amber);background:var(--white);cursor:pointer;text-align:center">
-      <div style="font-size:14px;font-weight:700;color:var(--amber)">Tap: why does this matter?</div></div>`;
+    h+=`<div onclick="revealFw('why')" class="reveal-card why glow" style="padding:32px"><div class="rc-text" style="font-size:14px">↓ Why does this matter?</div></div>`;
   } else {
-    h+=`<div class="slide-in" style="padding:12px 14px;border-radius:10px;background:var(--warm-grey);border-left:3px solid var(--amber)">
-      <div style="font-size:11px;font-weight:700;color:var(--amber);letter-spacing:1px;margin-bottom:3px">WHY IT MATTERS</div>
-      <div style="font-size:15px;line-height:1.7;color:var(--slate)">${s.why}</div>
+    h+=`<div class="quote-card why"><div class="qc-label">WHY IT MATTERS</div><div class="qc-body" style="font-size:15.5px;line-height:1.75">${s.why}</div></div>`;
+    h+=`<div style="padding:18px 20px;background:linear-gradient(135deg,${s.color}0a,${s.color}03);border:1px solid ${s.color}30;border-radius:10px;margin-top:6px">
+      <div style="font-size:11px;font-weight:700;color:${s.color};letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Try this</div>
+      <div style="font-size:14px;color:var(--slate);line-height:1.6">Read the green quote out loud. Notice how it feels different to deliver than the red one — that physical difference is the framework working.</div>
     </div>`;
   }
+  h+='</div>';
 
+  h+='</div>';
+
+  // Footer
+  h+='<div class="fw-foot"><div style="font-size:13px;color:var(--mid)">';
+  if(!allDone)h+=`<span style="color:var(--amber);font-weight:700">${[r.bad,r.good,r.why].filter(Boolean).length}/3</span> revealed for <strong>${s.word}</strong>`;
+  else h+=`<span style="color:var(--green);font-weight:700">✓ ${s.word} complete</span>`;
+  h+='</div>';
   if(allDone){
-    h+=`<div class="fade-in" style="margin-top:20px;text-align:center">`;
-    if(fwSlideIdx<fwSteps.length-1){const nx=fwSteps[fwSlideIdx+1];h+=`<button class="btn btn-primary" onclick="nextFwSlide()">Next: ${nx.word} →</button>`}
-    else h+=`<button class="btn btn-accent" onclick="goScreen(3)">Test if it stuck →</button>`;
-    h+=`</div>`;
+    if(fwSlideIdx<fwSteps.length-1){
+      const nx=fwSteps[fwSlideIdx+1];
+      h+=`<button class="btn btn-primary" onclick="nextFwSlide()">Next: ${nx.word}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>`;
+    } else {
+      h+=`<button class="btn btn-accent" onclick="goScreen(3)">Test if it stuck
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>`;
+    }
+  } else {
+    h+=`<div></div>`;
   }
+  h+='</div>';
+
+  h+='</div>';
   c.innerHTML=h;
 }
 function revealFw(k){if(!fwReveals[fwSlideIdx])fwReveals[fwSlideIdx]={};fwReveals[fwSlideIdx][k]=true;renderFwSlide()}
-function nextFwSlide(){fwSlideIdx++;fwReveals[fwSlideIdx]={};renderFwSlide();window.scrollTo({top:0,behavior:'smooth'})}
+function nextFwSlide(){fwSlideIdx++;fwReveals[fwSlideIdx]=fwReveals[fwSlideIdx]||{};renderFwSlide()}
+function jumpFw(i){if(i>fwSlideIdx)return;fwSlideIdx=i;renderFwSlide()}
 
 // ═══ SCREEN 3: ORDER RACE ═══
 function renderOrder(){
   orderPlaced=[null,null,null,null];orderPool=['ask','next','observe','bridge'];orderChecked=false;
   clearInterval(orderTimerInterval);orderElapsed=0;
   const c=document.getElementById('orderContent');
-  c.innerHTML=`<div class="tag" style="color:var(--teal);background:#1B6B7D14">Speed Recall</div>
-    <h2 class="heading">Put OBAN in order — from memory.</h2>
-    <p style="font-size:14px;color:var(--mid);margin-bottom:8px">You've just learned all four steps. Now put them in the right order. Tap a step to place it in the next empty slot.</p>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
-      <div style="font-size:13px;font-weight:700;color:var(--amber)">${ico('clock',16,'#D4922A')} <span id="orderTimer">0.0s</span></div>
+  c.innerHTML=`
+  <div class="order-shell">
+    <div class="order-left">
+      <div>
+        <div class="tag" style="color:var(--teal);background:#1B6B7D14">Speed Recall</div>
+        <h2 class="heading" style="margin-bottom:6px">Put OBAN in order — from memory.</h2>
+        <p style="font-size:14.5px;color:var(--mid);max-width:54ch;line-height:1.6">You've just learned all four steps. Drag each step from the right into the slots on the left in order. Tap a placed step to remove it.</p>
+      </div>
+      <div class="order-slots" id="orderSlots"></div>
     </div>
-    <div id="orderSlots"></div>
-    <div id="orderPoolEl" style="margin-top:12px;margin-bottom:16px"></div>
-    <div id="orderActions" style="text-align:center"></div>
-    <div id="orderFeedback"></div>`;
-  renderOrderSlots();
+    <div class="order-right">
+      <h3>The four steps</h3>
+      <div style="font-size:13px;color:var(--mid);margin-bottom:6px">Drag into a slot on the left</div>
+      <div class="pool" id="orderPoolEl"></div>
+      <div class="timer-row">
+        <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mid);font-weight:700">Time</div>
+        <div class="t-num" id="orderTimer">0.0s</div>
+      </div>
+      <div id="orderFeedback" style="margin-top:auto"></div>
+    </div>
+  </div>`;
+  renderOrderSlots();renderOrderPool();
   orderStartTime=performance.now();
   orderTimerInterval=setInterval(()=>{
     orderElapsed=((performance.now()-orderStartTime)/1000);
@@ -479,13 +838,17 @@ function renderOrderSlots(){
   const slots=document.getElementById('orderSlots');if(!slots)return;slots.innerHTML='';
   orderPlaced.forEach((item,i)=>{
     const div=document.createElement('div');
-    div.style.cssText=`padding:12px 14px;border-radius:10px;min-height:50px;border:2px ${item?'solid':'dashed'} ${item?orderColors[item]:'var(--border)'};background:${item?orderColors[item]+'08':'var(--white)'};display:flex;align-items:center;gap:10px;margin-bottom:8px;cursor:${item&&!orderChecked?'pointer':'default'};transition:all 0.2s`;
-    div.innerHTML=`<div style="width:28px;height:28px;border-radius:8px;background:${item?orderColors[item]:'var(--border)'};color:var(--white);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;font-family:var(--heading)">${item?orderLabels[item][0]:(i+1)}</div>
-      ${item?`<span style="font-size:15px;font-weight:600;color:var(--charcoal)">${orderLabels[item]}</span>`:'<span style="font-size:14px;color:var(--light);font-style:italic">—</span>'}`;
+    let cls='order-slot '+(item?'filled':'empty');
+    if(orderChecked&&item)cls+=' '+(item===orderCorrect[i]?'correct':'wrong');
+    div.className=cls;
+    div.dataset.slotIdx=i;
+    if(item)div.style.setProperty('--c',orderColors[item]);
+    if(item&&!orderChecked)div.style.borderColor=orderColors[item];
+    div.innerHTML=`<div class="num">${item?(orderChecked?(item===orderCorrect[i]?'✓':'✗'):orderLabels[item][0]):(i+1)}</div>
+      <div class="ol-text">${item?orderLabels[item]:'— empty —'}</div>`;
     if(item&&!orderChecked)div.onclick=()=>{orderPlaced[i]=null;orderPool.push(item);renderOrderSlots();renderOrderPool()};
     slots.appendChild(div);
   });
-  // Auto-check when full
   if(orderPlaced.every(p=>p!==null)&&!orderChecked)setTimeout(checkOrder,300);
 }
 
@@ -495,42 +858,106 @@ function renderOrderPool(){
     const chip=document.createElement('span');chip.className='pool-chip';
     chip.style.background=orderColors[item];chip.style.animation=`fadeUp 0.3s ease ${i*0.05}s both`;
     chip.textContent=orderLabels[item];
-    chip.onclick=()=>{const idx=orderPlaced.indexOf(null);if(idx===-1)return;orderPlaced[idx]=item;orderPool=orderPool.filter(p=>p!==item);renderOrderSlots();renderOrderPool()};
+    attachChipDrag(chip,item);
     pool.appendChild(chip);
   });
+}
+
+function placeOrderItem(item,slotIdx){
+  if(orderChecked)return false;
+  if(slotIdx==null||slotIdx<0||slotIdx>3)return false;
+  if(orderPlaced[slotIdx]!==null)return false;
+  orderPlaced[slotIdx]=item;
+  orderPool=orderPool.filter(p=>p!==item);
+  renderOrderSlots();renderOrderPool();
+  return true;
+}
+
+function attachChipDrag(chip,item){
+  let dragging=false,moved=false,startX=0,startY=0,offX=0,offY=0,origRect=null,lastTarget=null;
+  const onDown=(e)=>{
+    if(orderChecked)return;
+    e.preventDefault();
+    const r=chip.getBoundingClientRect();
+    origRect=r;startX=e.clientX;startY=e.clientY;offX=e.clientX-r.left;offY=e.clientY-r.top;
+    dragging=true;moved=false;
+    chip.setPointerCapture&&chip.setPointerCapture(e.pointerId);
+    document.addEventListener('pointermove',onMove);
+    document.addEventListener('pointerup',onUp,{once:true});
+    document.addEventListener('pointercancel',onUp,{once:true});
+  };
+  const onMove=(e)=>{
+    if(!dragging)return;
+    const dx=e.clientX-startX,dy=e.clientY-startY;
+    if(!moved&&Math.hypot(dx,dy)<5)return;
+    if(!moved){
+      moved=true;
+      chip.classList.add('dragging');
+      chip.style.width=origRect.width+'px';chip.style.height=origRect.height+'px';
+    }
+    chip.style.left=(e.clientX-offX)+'px';
+    chip.style.top=(e.clientY-offY)+'px';
+    const target=findSlotAt(e.clientX,e.clientY);
+    if(target!==lastTarget){
+      if(lastTarget)lastTarget.classList.remove('drop-target');
+      if(target)target.classList.add('drop-target');
+      lastTarget=target;
+    }
+  };
+  const onUp=(e)=>{
+    document.removeEventListener('pointermove',onMove);
+    if(!dragging)return;dragging=false;
+    if(lastTarget){lastTarget.classList.remove('drop-target');}
+    if(!moved){
+      const idx=orderPlaced.indexOf(null);
+      if(idx!==-1)placeOrderItem(item,idx);
+      return;
+    }
+    const target=findSlotAt(e.clientX,e.clientY);
+    chip.classList.remove('dragging');chip.style.left='';chip.style.top='';chip.style.width='';chip.style.height='';
+    if(target){
+      const slotIdx=parseInt(target.dataset.slotIdx,10);
+      placeOrderItem(item,slotIdx);
+    }
+    lastTarget=null;
+  };
+  chip.addEventListener('pointerdown',onDown);
+}
+
+function findSlotAt(x,y){
+  const slots=document.querySelectorAll('#orderSlots .order-slot.empty');
+  for(const s of slots){
+    const r=s.getBoundingClientRect();
+    if(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom)return s;
+  }
+  return null;
 }
 
 function checkOrder(){
   clearInterval(orderTimerInterval);orderChecked=true;
   const correct=orderPlaced.every((p,i)=>p===orderCorrect[i]);
-  const slots=document.getElementById('orderSlots');slots.innerHTML='';
-  orderPlaced.forEach((item,i)=>{
-    const ok=item===orderCorrect[i];
-    const div=document.createElement('div');
-    div.style.cssText=`padding:12px 14px;border-radius:10px;border:2px solid ${ok?'var(--green)':'var(--red)'};background:${ok?'var(--green-bg)':'var(--red-bg)'};display:flex;align-items:center;gap:10px;margin-bottom:8px;animation:${ok?'fadeUp':'shake'} 0.4s ease ${i*0.1}s both`;
-    div.innerHTML=`<div style="width:28px;height:28px;border-radius:8px;background:${ok?'var(--green)':'var(--red)'};color:var(--white);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">${ok?'✓':'✗'}</div>
-      <span style="font-size:15px;font-weight:600;color:var(--charcoal)">${orderLabels[item]}</span>`;
-    slots.appendChild(div);
-  });
+  renderOrderSlots();
   document.getElementById('orderPoolEl').innerHTML='';
   const fb=document.getElementById('orderFeedback');
   if(correct){
     const timeStr=orderElapsed.toFixed(1);
     const speed=orderElapsed<5?'Lightning fast.':orderElapsed<10?'Solid recall.':'You got there.';
     fb.innerHTML=`<div class="fade-in" style="margin-top:14px">
-      <div style="text-align:center;margin-bottom:16px">
-        <div class="bounce-in" style="width:64px;height:64px;border-radius:50%;background:var(--green);color:var(--white);display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;font-family:var(--heading)">${timeStr}s</div>
-        <div style="font-size:14px;color:var(--green);font-weight:700;margin-top:6px">${speed}</div>
+      <div style="text-align:center;margin-bottom:14px">
+        <div class="bounce-in" style="width:84px;height:84px;border-radius:50%;background:var(--green);color:var(--white);display:inline-flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;font-family:var(--heading)">${timeStr}s</div>
+        <div style="font-size:14px;color:var(--green);font-weight:700;margin-top:8px">${speed}</div>
       </div>
-      <div style="padding:14px;background:var(--green-bg);border-radius:8px;font-size:14px;color:var(--slate);line-height:1.6">
-        <strong style="color:var(--green)">Observe → Bridge → Ask → Next.</strong> You've got the sequence. Now let's see if you can use it when someone's looking at you and waiting for an answer.
+      <div style="padding:14px;background:var(--green-bg);border-radius:10px;font-size:14px;color:var(--slate);line-height:1.6;margin-bottom:14px">
+        <strong style="color:var(--green)">Observe → Bridge → Ask → Next.</strong> You've got the sequence. Now under pressure.
       </div>
-      <div style="text-align:center;margin-top:14px"><button class="btn btn-accent" onclick="goScreen(4)">Put me under pressure →</button></div>
+      <div style="text-align:center"><button class="btn btn-accent" onclick="goScreen(4)">Put me under pressure
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button></div>
     </div>`;
   } else {
     fb.innerHTML=`<div class="fade-in" style="margin-top:14px">
-      <div style="padding:14px;background:var(--red-bg);border-radius:8px;font-size:14px;color:var(--slate);line-height:1.6">Not quite — you need <strong>facts</strong> before <strong>impact</strong>, and you need to <strong>ask</strong> before you agree a <strong>next step</strong>.</div>
-      <div style="text-align:center;margin-top:14px"><button class="btn btn-secondary" onclick="renderOrder()">Try again</button></div>
+      <div style="padding:14px;background:var(--red-bg);border-radius:10px;font-size:14px;color:var(--slate);line-height:1.6;margin-bottom:14px">Not quite — facts come <strong>before</strong> impact, and you ask <strong>before</strong> agreeing a next step.</div>
+      <div style="text-align:center"><button class="btn btn-secondary" onclick="renderOrder()">Try again</button></div>
     </div>`;
   }
 }
@@ -542,18 +969,27 @@ function renderScenario(){
   const c=document.getElementById('scenarioContent');
   timerValue=s.time;
 
-  let h=`<div id="scTimerBar" style="height:4px;background:var(--border);border-radius:2px;margin-bottom:14px;overflow:hidden"><div id="scTimerFill" style="height:100%;width:100%;border-radius:2px;background:var(--teal);transition:width 1s linear,background 0.3s"></div></div>`;
-  h+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-    <div class="tag" style="color:var(--teal-dk);background:#0F4F5E14">Live Scenario</div>
-    <span style="font-size:12px;color:var(--mid)">Part ${scenarioStage+1}/${scenarios.length}</span>
-    <span id="scTimerDisplay" style="margin-left:auto;display:flex;align-items:center;gap:4px">${ico('clock',14,'#6E868F')}<span id="scTimerCount" style="font-size:15px;font-weight:700;color:var(--mid);font-variant-numeric:tabular-nums">${s.time}s</span></span>
+  let h=`<div class="sc-shell">
+    <div class="sc-left">
+      <div class="sc-meta">Live Scenario · Part ${scenarioStage+1} of ${scenarios.length}</div>
+      <div class="sc-scene">${s.scene}</div>
+      <p class="sc-text">${s.text}</p>
+      <div class="sc-prompt">
+        <div class="sc-prompt-label">They say to you</div>
+        <div class="sc-prompt-text">${s.prompt}</div>
+      </div>
+    </div>
+    <div class="sc-right">
+      <div class="sc-timer" id="scTimerWrap">
+        ${ico('clock',16,'#6E868F')}
+        <div class="sc-timer-bar"><div class="sc-timer-bar-fill" id="scTimerFill"></div></div>
+        <div class="sc-timer-num" id="scTimerCount">${s.time}s</div>
+      </div>
+      <div id="scTimeout"></div>
+      <div class="sc-options" id="scOptions"></div>
+      <div id="scNext" style="display:none"></div>
+    </div>
   </div>`;
-  h+=`<div style="font-size:13px;color:var(--mid);margin-bottom:4px">${s.scene}</div>`;
-  h+=`<p style="font-size:15px;line-height:1.7;color:var(--slate);margin-bottom:10px">${s.text}</p>`;
-  h+=`<h2 class="heading-sm">${s.prompt}</h2>`;
-  h+=`<div id="scTimeout" style="display:none"></div>`;
-  h+=`<div id="scOptions" style="margin-top:12px"></div>`;
-  h+=`<div id="scNext" style="display:none;margin-top:16px;text-align:center"></div>`;
   c.innerHTML=h;
 
   renderScOptions(s);
@@ -567,15 +1003,14 @@ function renderScenario(){
     const overlay=document.getElementById('dangerOverlay');
     if(fill){fill.style.width=pct+'%';fill.style.background=pct>30?'var(--teal)':pct>15?'var(--amber)':'var(--red)'}
     if(count){count.textContent=timerValue+'s';count.style.color=timerValue<=5?'var(--red)':'var(--mid)';if(timerValue<=5)count.classList.add('pulse-text');else count.classList.remove('pulse-text')}
-    // Danger overlay
-    if(overlay&&timerValue<=5)overlay.style.background=`rgba(200,58,46,${(5-timerValue)*0.03})`;
+    if(overlay&&timerValue<=5)overlay.style.background=`rgba(200,58,46,${(5-timerValue)*0.025})`;
     if(timerValue<=0){
       clearInterval(timerInterval);
       if(overlay)overlay.style.background='transparent';
-      const td=document.getElementById('scTimerDisplay');if(td)td.style.display='none';
+      const wrap=document.getElementById('scTimerWrap');if(wrap)wrap.style.display='none';
       if(!scenarioPicked){
-        const to=document.getElementById('scTimeout');to.style.display='block';
-        to.innerHTML=`<div class="shake" style="padding:12px;background:var(--amber-pale);border:1px solid var(--amber-lt);border-radius:8px;margin-bottom:12px;font-size:13px;color:var(--slate);text-align:center;display:flex;align-items:center;justify-content:center;gap:6px">
+        const to=document.getElementById('scTimeout');
+        to.innerHTML=`<div class="shake" style="padding:12px 16px;background:var(--amber-pale);border:1px solid var(--amber-lt);border-radius:10px;font-size:13.5px;color:var(--slate);text-align:center;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px">
           ${ico('clock',14,'#D4922A')} Time's up — the moment passed. Pick what you would have said.
         </div>`;
       }
@@ -586,23 +1021,23 @@ function renderScenario(){
 function renderScOptions(s){
   const c=document.getElementById('scOptions');c.innerHTML='';
   s.options.forEach((o,i)=>{
-    const div=document.createElement('div');div.className='opt-card'+(scenarioPicked?' revealed':'');
+    const div=document.createElement('div');div.className='sc-opt'+(scenarioPicked?' revealed':'');
     let bg='var(--white)',bdr='var(--border)',op='1';
     if(scenarioPicked){
       if(o.type==='strong'){bg='var(--green-bg)';bdr='var(--green)'}
       else if(scenarioPicked===o.id&&o.type==='bad'){bg='var(--red-bg)';bdr='var(--red)'}
       else if(scenarioPicked===o.id&&o.type==='partial'){bg='var(--amber-pale)';bdr='var(--amber)'}
-      if(scenarioPicked!==o.id&&o.type!=='strong')op='0.35';
+      if(scenarioPicked!==o.id&&o.type!=='strong')op='0.4';
     }
     div.style.cssText=`border-color:${bdr};background:${bg};opacity:${op}`;
     if(!scenarioPicked)div.style.animation=`fadeUp 0.3s ease ${i*0.06}s both`;
-    const iconCol=scenarioPicked&&o.type==='strong'?'#2D8659':scenarioPicked&&scenarioPicked===o.id&&o.type==='bad'?'#C4392A':'var(--slate)';
-    const iconBg=scenarioPicked&&o.type==='strong'?'#2D865914':scenarioPicked&&scenarioPicked===o.id?bdr+'14':'#1B6B7D08';
-    let html=`<div style="display:flex;gap:12px;align-items:center"><div style="width:32px;height:32px;border-radius:8px;background:${iconBg};display:flex;align-items:center;justify-content:center;flex-shrink:0">${ico(o.icon,18,iconCol)}</div><span style="font-size:15px;font-weight:600;color:var(--charcoal)">${o.text}</span></div>`;
+    const iconCol=scenarioPicked&&o.type==='strong'?'#2D8659':scenarioPicked&&scenarioPicked===o.id&&o.type==='bad'?'#C4392A':scenarioPicked&&scenarioPicked===o.id&&o.type==='partial'?'#D4922A':'#3D545D';
+    const iconBg=scenarioPicked&&o.type==='strong'?'#2D865914':scenarioPicked&&scenarioPicked===o.id?bdr+'1a':'#1B6B7D08';
+    let html=`<div class="sc-opt-row"><div class="sc-opt-ico" style="background:${iconBg}">${ico(o.icon,20,iconCol)}</div><div class="sc-opt-text">${o.text}</div></div>`;
     if(scenarioPicked&&(scenarioPicked===o.id||o.type==='strong')){
       const lbl=o.type==='strong'?'Strong':o.type==='partial'?'Partial':'Risky';
       const lc=o.type==='strong'?'var(--green)':o.type==='partial'?'var(--amber)':'var(--red)';
-      html+=`<div style="margin-top:8px;padding-left:44px;font-size:14px;line-height:1.65;color:var(--slate)"><span style="font-weight:700;color:${lc}">${lbl} — </span>${o.fb}</div>`;
+      html+=`<div class="sc-opt-fb"><span style="font-weight:700;color:${lc}">${lbl} — </span>${o.fb}</div>`;
     }
     div.innerHTML=html;
     if(!scenarioPicked)div.onclick=()=>pickSc(o.id,s);
@@ -615,57 +1050,68 @@ function pickSc(id,s){
   clearInterval(timerInterval);
   document.getElementById('dangerOverlay').style.background='transparent';
   scenarioPicked=id;scenarioChoices.push(id);
-  const td=document.getElementById('scTimerDisplay');if(td)td.style.display='none';
-  document.getElementById('scTimerBar').style.display='none';
+  const wrap=document.getElementById('scTimerWrap');if(wrap)wrap.style.display='none';
   renderScOptions(s||scenarios[scenarioStage]);
   const nx=document.getElementById('scNext');nx.style.display='block';
   const isLast=scenarioStage>=scenarios.length-1;
-  nx.innerHTML=`<div class="fade-in"><button class="btn btn-primary" onclick="${isLast?'goScreen(5)':'nextScStage()'}">
-    ${isLast?'See my results →':'Next situation →'}</button></div>`;
+  nx.innerHTML=`<div class="fade-in" style="text-align:center;margin-top:14px"><button class="btn btn-primary" onclick="${isLast?'goScreen(5)':'nextScStage()'}">
+    ${isLast?'See my results':'Next situation'}
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+  </button></div>`;
 }
-function nextScStage(){scenarioStage++;renderScenario();window.scrollTo({top:0})}
+function nextScStage(){scenarioStage++;renderScenario()}
 
-// ═══ SCREEN 5: PERSONAL DEBRIEF ═══
+// ═══ SCREEN 5: DEBRIEF ═══
 function renderDebrief(){
-  const strong=[scenarioChoices[0]==='oban',scenarioChoices[1]==='system'].filter(Boolean).length;
+  const total=scenarios.length;
+  const strong=scenarioChoices.reduce((n,id,i)=>{
+    const opt=(scenarios[i]?.options||[]).find(o=>o.id===id);
+    return n+(opt&&opt.type==='strong'?1:0);
+  },0);
   const inst=instincts.find(i=>i.id===instinctPicked);
-  const v=strong>=2
-    ?{title:'You held the line. Twice.',desc:"Under pressure, you chose honesty over comfort and systems thinking over blame.",grade:'A'}
-    :strong===1
-    ?{title:'Good instincts on one. Defaulted on the other.',desc:"The gap between knowing the framework and using it under pressure — that's exactly what this programme closes.",grade:'B'}
+  const v=strong===total
+    ?{title:`You held the line. ${total} for ${total}.`,desc:"Under pressure, you chose honesty over comfort and systems thinking over blame — every time.",grade:'A'}
+    :strong>=Math.ceil(total/2)
+    ?{title:'Good instincts most of the way. Defaulted at points.',desc:"The gap between knowing the framework and using it under pressure — that's exactly what this programme closes.",grade:'B'}
+    :strong>0
+    ?{title:'You found it once. Lost it under pressure.',desc:"That's normal. OBAN gives you a structure so you don't have to improvise when the pressure hits.",grade:'B'}
     :{title:'Under pressure, you defaulted to comfort.',desc:"That's normal. OBAN gives you a structure so you don't have to improvise when the pressure hits.",grade:'C'};
 
-  const scoreBg=strong===2?'var(--green)':strong===1?'var(--amber)':'var(--red)';
+  const scoreBg=strong===total?'var(--green)':strong>0?'var(--amber)':'var(--red)';
   const tasks=['Write your Observe (facts only)','Plan your Bridge (why it matters to them)','Prepare your Ask (genuine question)','Have the conversation','Reflect: what surprised you?'];
 
-  let h=`<div class="fade-in" style="text-align:center;margin-bottom:24px">
-    <div class="bounce-in" style="width:80px;height:80px;border-radius:50%;background:${scoreBg};color:var(--white);display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;margin:0 auto 14px">${strong}/2</div>
-    <h2 style="font-size:24px;font-weight:700;color:var(--charcoal);line-height:1.3;font-family:var(--heading)">${v.title}</h2>
-    <p style="font-size:15px;color:var(--mid);line-height:1.6;margin-top:6px;max-width:420px;margin-left:auto;margin-right:auto">${v.desc}</p>
-  </div>`;
+  let h=`<div class="debrief-shell">
+    <div class="db-left">
+      <div class="fade-in">
+        <div class="bounce-in score-orb" style="background:${scoreBg}">${strong}/${total}</div>
+        <div class="tag" style="color:${strong===total?'var(--green)':strong>0?'var(--amber)':'var(--red)'};margin-bottom:8px;background:${strong===total?'#2D865914':strong>0?'#D4922A14':'#C4392A14'}">Module 03 · Debrief</div>
+        <h2 style="font-size:clamp(24px,2.4vw,32px);font-weight:700;color:var(--charcoal);line-height:1.22;font-family:var(--heading);letter-spacing:-0.3px">${v.title}</h2>
+        <p style="font-size:clamp(15px,1.15vw,17px);color:var(--mid);line-height:1.65;margin-top:10px;max-width:42ch">${v.desc}</p>
+      </div>`;
 
-  // Personal profile
   if(inst){
-    h+=`<div class="slide-in" style="padding:14px 16px;background:var(--warm-grey);border-radius:10px;margin-bottom:16px;border-left:3px solid ${inst.color}">
-      <div style="font-size:12px;font-weight:700;color:${inst.color};letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Your Leadership Profile</div>
-      <p style="font-size:14px;line-height:1.6;color:var(--slate);margin:0"><strong>Default instinct:</strong> ${inst.pattern}. <strong>Under pressure:</strong> you ${strong>=2?'overrode your default and led with OBAN thinking':strong===1?'held the line once but reverted once':'fell back on instinct both times'}. ${strong<2?"That's the gap this programme is designed to close.":"That's the foundation to build on."}</p>
+    h+=`<div class="slide-in profile-card" style="border-left-color:${inst.color}">
+      <div style="font-size:11px;font-weight:700;color:${inst.color};letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Your Leadership Profile</div>
+      <p style="font-size:14px;line-height:1.65;color:var(--slate);margin:0"><strong>Default instinct:</strong> ${inst.pattern}. <strong>Under pressure:</strong> you ${strong===total?'overrode your default and led with OBAN thinking every time':strong>0?`held the line ${strong} of ${total} times`:'fell back on instinct each time'}. ${strong<total?"That's the gap this programme is designed to close.":"That's the foundation to build on."}</p>
     </div>`;
   }
 
-  // OBAN recap
-  h+=`<div style="padding:16px;background:var(--white);border:1px solid var(--border);border-radius:10px;margin-bottom:16px">
-    <div style="font-size:12px;font-weight:700;color:var(--teal);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">The Framework</div>
-    <div style="display:flex;gap:6px">${[{l:'O',w:'Observe',c:'#1B6B7D'},{l:'B',w:'Bridge',c:'#2A8A9E'},{l:'A',w:'Ask',c:'#D4922A'},{l:'N',w:'Next',c:'#2D8659'}].map(s=>`<div style="flex:1;text-align:center;padding:10px 4px;background:${s.c}0a;border-radius:8px;border:1px solid ${s.c}18"><div style="font-size:22px;font-weight:800;color:${s.c};font-family:var(--heading)">${s.l}</div><div style="font-size:11px;color:var(--slate);font-weight:600;margin-top:2px">${s.w}</div></div>`).join('')}</div>
-  </div>`;
-
-  // Plant task
-  h+=`<div style="padding:16px 18px;background:var(--teal-wash);border:1px solid var(--border);border-radius:10px;margin-bottom:16px">
-    <div style="font-size:12px;font-weight:700;color:var(--teal);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Your Plant Task</div>
-    <p style="font-size:15px;line-height:1.7;color:var(--slate);margin:0 0 12px">Before the next live session: have <strong>one real OBAN conversation</strong>. Start moderate — something that's been sitting for a couple of weeks.</p>
-    ${tasks.map((t,i)=>`<div style="display:flex;gap:8px;align-items:center;margin-bottom:5px"><div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--teal);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--teal);flex-shrink:0">${i+1}</div><span style="font-size:13px;color:var(--slate)">${t}</span></div>`).join('')}
-  </div>`;
-
-  h+=`<div style="text-align:center;margin-top:4px"><button class="btn btn-primary" onclick="goScreen(6)">Continue →</button></div>`;
+  h+=`</div><div class="db-right">
+    <div>
+      <div style="font-size:12px;font-weight:700;color:var(--teal);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">The Framework — locked in</div>
+      <div class="framework-recap">${[{l:'O',w:'Observe',c:'#1B6B7D'},{l:'B',w:'Bridge',c:'#2A8A9E'},{l:'A',w:'Ask',c:'#D4922A'},{l:'N',w:'Next',c:'#2D8659'}].map(s=>`<div class="fr-cell" style="background:${s.c}0a;border-color:${s.c}30"><div class="l" style="color:${s.c}">${s.l}</div><div class="w">${s.w}</div></div>`).join('')}</div>
+    </div>
+    <div class="task-card">
+      <div style="font-size:12px;font-weight:700;color:var(--teal);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Your Plant Task</div>
+      <p style="font-size:14.5px;line-height:1.65;color:var(--slate);margin:0">Before the next live session: have <strong>one real OBAN conversation</strong>. Start moderate — something that's been sitting for a couple of weeks.</p>
+      <div class="task-list">
+        ${tasks.map((t,i)=>`<div class="task-item"><div class="task-num">${i+1}</div><span>${t}</span></div>`).join('')}
+      </div>
+    </div>
+    <div style="text-align:right;margin-top:6px"><button class="btn btn-primary" onclick="goScreen(6)">Continue
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button></div>
+  </div></div>`;
 
   document.getElementById('debriefContent').innerHTML=h;
 }
@@ -677,20 +1123,17 @@ function restartAll(){
   screenHistory=[0];
   clearInterval(timerInterval);clearInterval(orderTimerInterval);
   goScreen(0);
-  ['open1','open2','open3'].forEach(id=>{const el=document.getElementById(id);el.style.opacity='0';el.style.transform='translateY(8px)'});
-  ['bridge1','bridge2','bridge3','bridge4'].forEach(id=>{const el=document.getElementById(id);if(el){el.style.opacity='0';el.style.transform='translateY(8px)'}});
-  ['nx1','nx2','nx3','nx4'].forEach(id=>{const el=document.getElementById(id);if(el){el.style.opacity='0';el.style.transform='translateY(8px)'}});
+  ['open1','open2','open3'].forEach(id=>{const el=document.getElementById(id);if(el){el.style.opacity='0';el.style.transform='translateY(14px)'}});
+  ['bridge1','bridge2','bridge3','bridge4'].forEach(id=>{const el=document.getElementById(id);if(el){el.style.opacity='0';el.style.transform='translateY(14px)'}});
+  ['nx1','nx2','nx3','nx4'].forEach(id=>{const el=document.getElementById(id);if(el){el.style.opacity='0';el.style.transform='translateY(14px)'}});
   const sb=document.getElementById('scene1Btn');if(sb){sb.style.opacity='0';sb.style.transform='translateY(8px)'}
   setTimeout(()=>{document.getElementById('open1').style.opacity='1';document.getElementById('open1').style.transform='none'},400);
-  setTimeout(()=>{document.getElementById('open2').style.opacity='1';document.getElementById('open2').style.transform='none'},1800);
-  setTimeout(()=>{document.getElementById('open3').style.opacity='1';document.getElementById('open3').style.transform='none'},3400);
+  setTimeout(()=>{document.getElementById('open2').style.opacity='1';document.getElementById('open2').style.transform='none'},1500);
+  setTimeout(()=>{document.getElementById('open3').style.opacity='1';document.getElementById('open3').style.transform='none'},2700);
 }
 
 // Init
 updateDots();
-// Also render order pool on first load of screen 3
-const origRenderOrder=renderOrder;
-renderOrder=function(){origRenderOrder();renderOrderPool()};
 </script>
 </body>
 </html>
