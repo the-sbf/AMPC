@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMPC Leadership Foundations · Module 3</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --heading:'Libre Baskerville',Georgia,serif;
+  --body:'Source Sans 3',-apple-system,sans-serif;
+  --teal:#1B6B7D;--teal-dk:#0F4F5E;--teal-dp:#0A3A47;
+  --teal-lt:#238FA6;--teal-pale:#E6F3F6;--teal-wash:#F4FAFB;
+  --amber:#D4922A;--amber-lt:#F0D9A8;--amber-pale:#FDF6E9;
+  --charcoal:#1C2B31;--slate:#3D545D;--mid:#6E868F;
+  --light:#A8C0C8;--border:#D6E4E9;--off:#F7FAFB;
+  --white:#FFF;--green:#2D8659;--green-bg:#EDF7F1;
+  --red:#C4392A;--red-bg:#FDF2F0;--warm-grey:#F0EDEA;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:var(--body)}
+::selection{background:#1B6B7D22}
+body{background:var(--off);min-height:100vh;overflow-x:hidden}
+button{cursor:pointer;transition:all 0.15s ease}
+button:hover:not(:disabled){filter:brightness(1.08);transform:translateY(-1px)}
+button:active:not(:disabled){transform:translateY(0)}
+.screen{padding:28px 20px 36px;max-width:560px;margin:0 auto}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:4px;margin-bottom:10px}
+h2.heading{font-size:clamp(20px,4vw,28px);font-weight:700;color:var(--charcoal);line-height:1.35;margin-bottom:14px;font-family:var(--heading)}
+h2.heading-sm{font-size:clamp(17px,3vw,22px);font-weight:700;color:var(--charcoal);line-height:1.35;margin-bottom:14px;font-family:var(--heading)}
+.btn{padding:12px 28px;border-radius:8px;font-size:15px;font-weight:700;border:none;letter-spacing:0.3px}
+.btn-primary{background:var(--teal);color:var(--white)}
+.btn-accent{background:var(--amber);color:var(--white)}
+.btn-secondary{background:transparent;color:var(--teal);border:2px solid var(--teal)}
+.btn:disabled{opacity:0.4;cursor:default}
+.top-bar{background:#FFFFFFee;backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50}
+.progress-dots{display:flex;gap:4px}
+.dot{height:8px;border-radius:4px;transition:all 0.3s}
+.footer{text-align:center;padding:16px;border-top:1px solid var(--border)}
+.footer span{font-size:11px;color:var(--light);letter-spacing:1px}
+.screen-panel{display:none}
+.screen-panel.active{display:block}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
+@keyframes popIn{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(212,146,42,0)}50%{box-shadow:0 0 20px 4px rgba(212,146,42,0.25)}}
+@keyframes bounceIn{0%{transform:scale(0)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+@keyframes countPop{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
+.fade-in{animation:fadeUp 0.5s ease forwards}
+.slide-in{animation:slideIn 0.4s ease forwards}
+.pop-in{animation:popIn 0.3s ease forwards}
+.shake{animation:shake 0.4s ease}
+.pulse-text{animation:pulse 1s ease infinite}
+.glow{animation:glow 1.5s ease infinite}
+.bounce-in{animation:bounceIn 0.4s ease forwards}
+.count-pop{animation:countPop 0.3s ease}
+
+/* Perspective card */
+.perspective-card{position:relative;transition:transform 0.6s ease;transform-style:preserve-3d}
+.perspective-card.flipped{transform:rotateY(180deg)}
+.perspective-front,.perspective-back{backface-visibility:hidden;border-radius:10px;padding:16px}
+.perspective-back{transform:rotateY(180deg);position:absolute;top:0;left:0;width:100%;height:100%}
+
+/* Danger overlay */
+.danger-overlay{position:fixed;inset:0;pointer-events:none;transition:background 2s ease;z-index:40}
+
+/* Pool chip hover */
+.pool-chip{padding:10px 20px;border-radius:24px;color:var(--white);font-size:14px;font-weight:700;cursor:pointer;display:inline-block;margin:0 8px 8px 0;letter-spacing:0.3px;transition:all 0.2s}
+.pool-chip:hover{transform:scale(1.06)}
+
+/* Option card hover */
+.opt-card{padding:14px 16px;border-radius:10px;border:2px solid var(--border);background:var(--white);cursor:pointer;transition:all 0.25s;margin-bottom:8px}
+.opt-card:hover:not(.revealed){border-color:var(--teal-lt);transform:translateX(4px)}
+</style>
+</head>
+<body>
+
+<div class="danger-overlay" id="dangerOverlay"></div>
+
+<div class="top-bar">
+  <div style="display:flex;align-items:center;gap:8px">
+    <button id="backBtn" onclick="goBack()" style="display:none;background:none;border:none;padding:4px;margin-right:4px;color:var(--teal);cursor:pointer;transition:all 0.15s">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <svg width="18" height="18" viewBox="0 0 28 28" fill="none"><rect x="14" y="2" width="15" height="15" rx="2" transform="rotate(45 14 2)" stroke="#1B6B7D" stroke-width="2" fill="none"/><rect x="14" y="7" width="9" height="9" rx="1" transform="rotate(45 14 7)" stroke="#1B6B7D" stroke-width="1.5" fill="none"/></svg>
+    <span style="font-size:12px;font-weight:700;color:var(--teal);letter-spacing:1.5px">AMPC</span>
+    <span style="color:var(--light);font-size:12px">·</span>
+    <span style="font-size:12px;color:var(--mid)">Leadership Foundations</span>
+  </div>
+  <div class="progress-dots" id="progressDots"></div>
+</div>
+
+<!-- ═══ SCREEN 0: COLD OPEN ═══ -->
+<div class="screen-panel active" id="screen0">
+<div class="screen">
+  <div style="min-height:65vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
+    <div id="open1" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease">
+      <div class="tag" style="color:var(--amber);background:#D4922A14">Leadership Foundations · Module 3</div>
+      <h1 style="font-size:clamp(26px,5.5vw,38px);font-weight:700;color:var(--charcoal);line-height:1.25;max-width:460px;font-family:var(--heading);margin-top:8px">The Hard Conversation</h1>
+    </div>
+    <div id="open2" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease">
+      <p style="font-size:17px;color:var(--mid);margin-top:16px;max-width:400px;line-height:1.65">There's a conversation you've been avoiding. You know the one. It's been sitting there for weeks.</p>
+      <p style="font-size:15px;color:var(--mid);margin-top:8px;max-width:400px;line-height:1.6">This module teaches you how to have it — clearly, kindly, and without destroying the relationship.</p>
+    </div>
+    <div id="open3" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease">
+      <div style="margin-top:28px;display:flex;flex-direction:column;align-items:center;gap:10px">
+        <button class="btn btn-primary" onclick="goScreen(1)">Start the module →</button>
+        <div style="display:flex;align-items:center;gap:6px;color:var(--light);font-size:12px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--light)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>≈ 5 minutes · interactive</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ SCREEN 1: SCENE SETUP ═══ -->
+<div class="screen-panel" id="screen1">
+<div class="screen">
+  <div style="min-height:60vh;display:flex;flex-direction:column;justify-content:center">
+    <div class="tag" style="color:var(--teal);background:#1B6B7D14">Leadership Check-In</div>
+    <h2 class="heading" style="margin-bottom:20px">Before we teach you anything — let's see what you'd actually do.</h2>
+    <div style="padding:18px 20px;background:var(--warm-grey);border-radius:10px;margin-bottom:20px;border-left:3px solid var(--teal)">
+      <p style="font-size:16px;line-height:1.8;color:var(--slate);margin:0">You're the WHS coordinator at a mid-sized beef plant. Over the past two weeks, you've watched a shift supervisor — well-liked, been here 12 years — consistently skip the pre-start safety check on the boning line.</p>
+    </div>
+    <div style="padding:18px 20px;background:var(--amber-pale);border-radius:10px;margin-bottom:24px;border-left:3px solid var(--amber)">
+      <p style="font-size:16px;line-height:1.8;color:var(--slate);margin:0">Other workers have started copying him. You know you need to say something. But he's respected. He's been here longer than you. And the last person who challenged him got the cold shoulder for weeks.</p>
+    </div>
+    <div id="scene1Btn" style="opacity:0;transform:translateY(8px);transition:all 0.5s ease;text-align:center">
+      <p style="font-size:15px;color:var(--mid);margin-bottom:14px;font-style:italic">It's Tuesday morning. You see him skip the check again.</p>
+      <button class="btn btn-primary" onclick="goScreen(1.5)">What do you do? →</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ SCREEN 1.5: THE CHOICE ═══ -->
+<div class="screen-panel" id="screen1b">
+<div class="screen">
+  <div class="tag" style="color:var(--teal);background:#1B6B7D14">Leadership Check-In</div>
+  <div style="font-size:13px;color:var(--mid);margin-bottom:6px">Tuesday morning · Boning room floor</div>
+  <h2 class="heading">He's just skipped the check again. The team is watching. What do you do?</h2>
+  <p style="font-size:14px;color:var(--mid);margin-bottom:16px">Be honest — pick what you'd <em>actually</em> do, not what you think you should do.</p>
+  <div id="instinctGrid" style="display:flex;flex-direction:column;gap:8px"></div>
+  <div id="instinctResult" style="display:none"></div>
+</div>
+</div>
+
+<!-- ═══ SCREEN 1.75: THE BRIDGE ═══ -->
+<div class="screen-panel" id="screen1c">
+<div class="screen">
+  <div style="min-height:55vh;display:flex;flex-direction:column;justify-content:center;text-align:center">
+    <div id="bridge1" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease">
+      <p style="font-size:clamp(20px,4vw,28px);font-weight:700;color:var(--charcoal);line-height:1.35;font-family:var(--heading);max-width:440px;margin:0 auto">Every option either avoided the conversation — or had it badly.</p>
+    </div>
+    <div id="bridge2" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease">
+      <p style="font-size:17px;color:var(--mid);margin-top:20px;line-height:1.65;max-width:400px;margin-left:auto;margin-right:auto">Avoiding it lets the risk grow. Hinting wastes your authority. Blurting destroys the relationship. Documenting turns a conversation into a case.</p>
+    </div>
+    <div id="bridge3" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease">
+      <p style="font-size:20px;font-weight:700;color:var(--amber);margin-top:24px;font-family:var(--heading)">There's a better way. It's called OBAN.</p>
+    </div>
+    <div id="bridge4" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease">
+      <div style="margin-top:24px"><button class="btn btn-primary" onclick="goScreen(2)">Show me →</button></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ SCREEN 2: FRAMEWORK CAROUSEL ═══ -->
+<div class="screen-panel" id="screen2"><div class="screen"><div id="fwSlide"></div></div></div>
+
+<!-- ═══ SCREEN 3: ORDER RACE ═══ -->
+<div class="screen-panel" id="screen3"><div class="screen"><div id="orderContent"></div></div></div>
+
+<!-- ═══ SCREEN 4: LIVE SCENARIO ═══ -->
+<div class="screen-panel" id="screen4"><div class="screen"><div id="scenarioContent"></div></div></div>
+
+<!-- ═══ SCREEN 5: DEBRIEF ═══ -->
+<div class="screen-panel" id="screen5"><div class="screen" id="debriefContent"></div></div>
+
+<!-- ═══ SCREEN 6: UP NEXT ═══ -->
+<div class="screen-panel" id="screen6">
+<div class="screen">
+  <div style="min-height:65vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
+    <div id="nx1" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease">
+      <div style="width:56px;height:56px;border-radius:50%;background:var(--green);color:var(--white);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="tag" style="color:var(--green);background:#2D865914">Module 3 Complete</div>
+      <h2 style="font-size:clamp(22px,4.5vw,32px);font-weight:700;color:var(--charcoal);line-height:1.25;font-family:var(--heading);margin-top:8px;max-width:400px">You now have a framework for saying the hard thing well.</h2>
+    </div>
+    <div id="nx2" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease">
+      <p style="font-size:15px;color:var(--mid);margin-top:16px;line-height:1.65;max-width:380px">The skill isn't in knowing OBAN. It's in using it when your heart rate is up and someone's looking at you waiting for an answer.</p>
+      <p style="font-size:14px;color:var(--mid);margin-top:10px;max-width:380px">That's what the plant task is for. One real conversation before the next session.</p>
+    </div>
+    <div id="nx3" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease;margin-top:28px;width:100%;max-width:420px">
+      <div style="padding:20px;background:linear-gradient(135deg,var(--teal-dp),var(--teal-dk));border-radius:12px;color:var(--white);text-align:center">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;opacity:0.5;margin-bottom:8px">Up Next</div>
+        <div style="font-size:22px;font-weight:700;font-family:var(--heading);line-height:1.3">Module 4:<br>Leading Across Shifts</div>
+        <div style="font-size:14px;opacity:0.7;margin-top:8px;line-height:1.5">How to build influence with people you rarely see, on timelines you don't control.</div>
+        <div style="margin-top:16px">
+          <button class="btn" style="background:var(--amber);color:var(--white);padding:12px 32px" onclick="alert('This is a preview — Module 4 would launch here in the full programme.')">Start Module 4 →</button>
+        </div>
+      </div>
+    </div>
+    <div id="nx4" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease;margin-top:20px">
+      <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-secondary" style="padding:8px 18px;font-size:13px" onclick="restartAll()">Replay Module 3</button>
+        <button class="btn" style="padding:8px 18px;font-size:13px;background:var(--warm-grey);color:var(--slate);border:none" onclick="goScreen(0)">Back to start</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="footer"><span>Delivered by ThinkShow × Kula Learn</span></div>
+
+<script>
+// ═══ STATE ═══
+let currentScreen = 0;
+let instinctPicked = null;
+let fwSlideIdx = 0;
+let fwReveals = {};
+let orderPlaced = [null,null,null,null];
+let orderPool = ['ask','next','observe','bridge'];
+let orderChecked = false;
+let orderStartTime = 0;
+let orderTimerInterval = null;
+let orderElapsed = 0;
+let scenarioStage = 0;
+let scenarioPicked = null;
+let scenarioChoices = [];
+let timerInterval = null;
+let timerValue = 0;
+
+// ═══ ICONS ═══
+function ico(type,size=24,color='#1B6B7D'){
+  const a=`width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"`;
+  return({
+    avoid:`<svg ${a}><path d="M17 18a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M15 9a3 3 0 1 1-6 0"/><line x1="9" y1="10" x2="9.01" y2="10" stroke-width="3"/><line x1="15" y1="10" x2="15.01" y2="10" stroke-width="3"/></svg>`,
+    hint:`<svg ${a}><path d="M12 20h.01"/><path d="M8 16V7a4 4 0 1 1 8 0v9"/><path d="M4 16h16"/></svg>`,
+    blurt:`<svg ${a}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+    script:`<svg ${a}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="12" y2="17"/></svg>`,
+    handshake:`<svg ${a}><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/></svg>`,
+    clipboard:`<svg ${a}><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>`,
+    chat:`<svg ${a}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+    cog:`<svg ${a}><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
+    user:`<svg ${a}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+    book:`<svg ${a}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
+    shrug:`<svg ${a}><circle cx="12" cy="7" r="4"/><path d="M5.5 21c-.5-3.5 1-6 3-7"/><path d="M18.5 21c.5-3.5-1-6-3-7"/><path d="M9 14h6"/></svg>`,
+    clock:`<svg ${a}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    flip:`<svg ${a}><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>`,
+  })[type]||'';
+}
+
+// ═══ DATA ═══
+const instincts = [
+  {id:'avoid',icon:'avoid',label:'Let it slide — again',sub:"You tell yourself you'll catch him later when the timing's better.",color:'#6E868F',pattern:'The Avoider',insight:"You're waiting for a better moment — but it never comes. Meanwhile, more workers copy the shortcut, and the risk compounds. Avoidance feels like patience, but it's actually a decision to accept the risk for another day."},
+  {id:'hint',icon:'hint',label:'Make a general announcement',sub:'Remind the whole team about pre-start checks at the briefing — without naming him.',color:'#2A8A9E',pattern:'The Hinter',insight:"You've addressed the behaviour without addressing the person. The workers already doing the check feel lectured. The supervisor has plausible deniability. Nothing changes, and you've spent your authority on a message nobody heard."},
+  {id:'blurt',icon:'blurt',label:'Call it out on the spot',sub:'Walk over right now: "Dave, you\'ve skipped the check again. That needs to stop."',color:'#D4922A',pattern:'The Blurter',insight:"Real courage — you spoke up. But correcting a 12-year veteran in front of his team triggers humiliation, not change. He'll comply today and resent you tomorrow. The team sees safety as surveillance, not support."},
+  {id:'script',icon:'script',label:'Document and escalate',sub:'Log the observations, prepare a formal report, raise it with his manager.',color:'#1B6B7D',pattern:'The Processor',insight:"Bulletproof paper trail — but you've turned a conversation into a case. He'll find out through his manager that you've been watching and documenting instead of talking to him. Trust: gone."},
+];
+
+const fwSteps = [
+  {letter:'O',word:'Observe',color:'#1B6B7D',front:"Start with what you've seen — not what you think.",principle:"State the facts. No interpretation, no judgement.",bad:'"You clearly don\'t care about safety."',good:'"I noticed the pre-start check was skipped on the boning line three times last week."',why:"Facts open a conversation. Judgements close one. The moment you attribute motive, the other person stops listening and starts defending.",daveHears:{bad:"He thinks I'm reckless. He's already made up his mind about me.",good:"Okay — he's noticed something specific. That's fair. I can respond to that."}},
+  {letter:'B',word:'Bridge',color:'#2A8A9E',front:"Connect it to something they care about.",principle:"Show why this matters — to them, their team, the plant.",bad:'"This is a compliance issue and you need to fix it."',good:'"When the check gets skipped, the people on your line are at risk — and I know that\'s not what you want."',why:"People don't change because of policies. They change because something matters to them. Find the bridge between their world and the change you need.",daveHears:{bad:"He's quoting the rulebook at me. I've been here 12 years. I know the rules.",good:"He's not lecturing me — he's talking about my people. He's right, I don't want anyone getting hurt."}},
+  {letter:'A',word:'Ask',color:'#D4922A',front:"Ask a real question. Then actually listen.",principle:"Find out what's really going on before you prescribe a solution.",bad:'"Why do you keep doing this?"',good:'"What\'s going on with the pre-start check? Is there something about the process that\'s not working?"',why:"This is where most leaders skip to telling. But the question is where you discover whether it's a training issue, a design issue, or a culture issue — each needs a different response.",daveHears:{bad:"He's interrogating me. This feels like a disciplinary.",good:"He actually wants to know. The truth is the checklist takes 15 minutes and we've lost two staff this month. I haven't had time."}},
+  {letter:'N',word:'Next Step',color:'#2D8659',front:"Agree on one concrete action. Together.",principle:"Not a vague promise — a specific, shared commitment.",bad:'"Just make sure it doesn\'t happen again."',good:'"Let\'s try this: full check every shift this week. I\'ll come by Thursday to see how it\'s going — and if the time pressure is real, I want to help fix that."',why:"A good 'Next' is co-owned, time-bound, and checkable. It turns the conversation into a commitment, not a lecture.",daveHears:{bad:"He's washed his hands of it. If it happens again, it's all on me. No support.",good:"He's giving me a week, he's coming back, and he's offering to help with the real problem. I can work with that."}},
+];
+
+const orderCorrect = ['observe','bridge','ask','next'];
+const orderLabels = {observe:'Observe',bridge:'Bridge',ask:'Ask',next:'Next Step'};
+const orderColors = {observe:'#1B6B7D',bridge:'#2A8A9E',ask:'#D4922A',next:'#2D8659'};
+
+const scenarios = [
+  {scene:'Monday 6:20am · Boning room',text:"A team leader pulls you aside. Friday afternoon, a pallet shifted off a forklift — nobody hit, but two workers were standing there 30 seconds earlier. No report filed. She says:",prompt:'"Can we sort this quietly? He\'s a good bloke. Nobody got hurt."',time:15,
+    options:[
+      {id:'agree',icon:'handshake',text:"Sure — let's keep it between us",type:'bad',fb:"You've told her loyalty beats safety. Next time, she won't report at all."},
+      {id:'escalate',icon:'clipboard',text:'I have to report this immediately',type:'partial',fb:"Right instinct, wrong delivery. She trusted you enough to come forward — respond like a policy machine and she won't come to you again."},
+      {id:'oban',icon:'chat',text:"I hear you. I do have to follow this up — but it won't be about blame.",type:'strong',fb:"OBAN in action. You've acknowledged her concern, committed to the process, and protected the relationship. She'll come to you again."},
+    ]},
+  {scene:"Thursday · Plant manager's office",text:"Your investigation found the real cause: throughput targets went up 15%. Drivers use the old stacking method because the new SOP is too slow at pace. The plant manager asks:",prompt:'"So — training issue or a people issue?"',time:20,
+    options:[
+      {id:'training',icon:'book',text:'Training issue — they need a refresher',type:'bad',fb:"You'll retrain drivers, tick a box, and nothing changes — the root cause is pace, not knowledge."},
+      {id:'people',icon:'user',text:'People issue — he cut corners',type:'bad',fb:"You've thrown the driver under the bus for doing what every driver does. The real cause stays hidden."},
+      {id:'system',icon:'cog',text:"Neither — it's a systems issue. The target makes the safe method unworkable.",type:'strong',fb:"This takes courage. You're telling the plant manager the operating conditions they set are part of the risk. This is what WHS leadership looks like."},
+      {id:'both',icon:'shrug',text:'A bit of both — retrain and monitor',type:'partial',fb:"Feels diplomatic but it's a dodge. Everyone leaves without addressing the actual cause."},
+    ]},
+];
+
+// ═══ NAVIGATION ═══
+const screenOrder = [0,1,1.5,1.75,2,3,4,5,6];
+function updateDots(){
+  const d=document.getElementById('progressDots');d.innerHTML='';
+  const idx=screenOrder.indexOf(currentScreen);
+  screenOrder.forEach((_,i)=>{const dot=document.createElement('div');dot.className='dot';dot.style.width=(i===idx?'20px':'8px');dot.style.background=i<idx?'var(--teal)':i===idx?'var(--amber)':'var(--border)';d.appendChild(dot)});
+}
+
+let screenHistory = [0];
+
+function goBack(){
+  if(screenHistory.length<=1)return;
+  screenHistory.pop();
+  const prev=screenHistory[screenHistory.length-1];
+  // Go to prev screen without pushing to history
+  document.querySelectorAll('.screen-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById({1.5:'screen1b',1.75:'screen1c'}[prev]||('screen'+prev)).classList.add('active');
+  currentScreen=prev;updateDots();updateBackBtn();window.scrollTo({top:0});
+  document.getElementById('dangerOverlay').style.background='transparent';
+  clearInterval(timerInterval);
+}
+
+function updateBackBtn(){
+  const btn=document.getElementById('backBtn');
+  if(btn)btn.style.display=screenHistory.length>1?'block':'none';
+}
+
+function goScreen(n){
+  document.querySelectorAll('.screen-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById({1.5:'screen1b',1.75:'screen1c'}[n]||('screen'+n)).classList.add('active');
+  currentScreen=n;
+  screenHistory.push(n);
+  updateDots();updateBackBtn();window.scrollTo({top:0});
+  document.getElementById('dangerOverlay').style.background='transparent';
+  clearInterval(timerInterval);
+  if(n===1)setTimeout(()=>{const b=document.getElementById('scene1Btn');if(b){b.style.opacity='1';b.style.transform='none'}},1200);
+  if(n===1.5)renderInstinct();
+  if(n===1.75){[['bridge1',300],['bridge2',1500],['bridge3',3000],['bridge4',4000]].forEach(([id,d])=>setTimeout(()=>{const e=document.getElementById(id);if(e){e.style.opacity='1';e.style.transform='none'}},d))}
+  if(n===2){fwSlideIdx=0;fwReveals={};renderFwSlide()}
+  if(n===3)renderOrder();
+  if(n===4)renderScenario();
+  if(n===5)renderDebrief();
+  if(n===6){[['nx1',300],['nx2',1200],['nx3',2200],['nx4',3200]].forEach(([id,d])=>setTimeout(()=>{const e=document.getElementById(id);if(e){e.style.opacity='1';e.style.transform='none'}},d))}
+}
+
+// ═══ SCREEN 0: COLD OPEN ═══
+setTimeout(()=>{document.getElementById('open1').style.opacity='1';document.getElementById('open1').style.transform='none'},400);
+setTimeout(()=>{document.getElementById('open2').style.opacity='1';document.getElementById('open2').style.transform='none'},1800);
+setTimeout(()=>{document.getElementById('open3').style.opacity='1';document.getElementById('open3').style.transform='none'},3400);
+
+// ═══ SCREEN 1.5: INSTINCT CHECK ═══
+function renderInstinct(){
+  const grid=document.getElementById('instinctGrid');grid.innerHTML='';
+  instincts.forEach((o,i)=>{
+    const card=document.createElement('div');
+    const active=instinctPicked===o.id;const faded=instinctPicked&&!active;
+    card.className='opt-card'+(instinctPicked?' revealed':'');
+    card.style.cssText=`border-color:${active?o.color:'var(--border)'};background:${active?o.color+'0c':'var(--white)'};opacity:${faded?'0.35':'1'};transform:${faded?'scale(0.98)':'scale(1)'};animation-delay:${i*0.08}s`;
+    if(!instinctPicked)card.style.animation=`fadeUp 0.4s ease ${i*0.08}s both`;
+    card.innerHTML=`<div style="display:flex;gap:12px;align-items:center">
+      <div style="width:36px;height:36px;border-radius:10px;background:${active?o.color+'18':'var(--teal-pale)'};display:flex;align-items:center;justify-content:center;flex-shrink:0">${ico(o.icon,20,active?o.color:'#6E868F')}</div>
+      <div><div style="font-size:15px;font-weight:700;color:var(--charcoal)">${o.label}</div><div style="font-size:13px;color:var(--mid);margin-top:2px">${o.sub}</div></div>
+    </div>`;
+    if(!instinctPicked)card.onclick=()=>{instinctPicked=o.id;renderInstinct();setTimeout(showInstinctResult,400)};
+    grid.appendChild(card);
+  });
+  if(instinctPicked)showInstinctResult();
+}
+
+function showInstinctResult(){
+  const o=instincts.find(i=>i.id===instinctPicked);
+  const el=document.getElementById('instinctResult');el.style.display='block';
+  el.innerHTML=`<div class="fade-in" style="margin-top:16px;padding:16px;background:var(--teal-wash);border:1px solid var(--border);border-radius:10px">
+    <div style="display:flex;gap:10px;align-items:flex-start">
+      <div style="width:32px;height:32px;border-radius:8px;background:${o.color}14;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px">${ico(o.icon,18,o.color)}</div>
+      <div><div style="font-size:13px;font-weight:700;color:${o.color};margin-bottom:4px">${o.pattern}</div>
+      <p style="font-size:15px;line-height:1.7;color:var(--slate);margin:0">${o.insight}</p></div>
+    </div>
+  </div>
+  <div style="margin-top:16px;text-align:center"><button class="btn btn-primary" onclick="goScreen(1.75)">Continue →</button></div>`;
+}
+
+// ═══ SCREEN 2: FRAMEWORK CAROUSEL WITH PERSPECTIVE FLIP ═══
+function renderFwSlide(){
+  const c=document.getElementById('fwSlide');const s=fwSteps[fwSlideIdx];
+  const r=fwReveals[fwSlideIdx]||{};const allDone=r.bad&&r.good&&r.why;
+
+  let pips='<div style="display:flex;gap:6px;margin-bottom:20px">';
+  fwSteps.forEach((st,i)=>{pips+=`<div style="flex:1;height:4px;border-radius:2px;background:${i<=fwSlideIdx?st.color:'var(--border)'};opacity:${i===fwSlideIdx?1:i<fwSlideIdx?0.5:0.3};transition:all 0.3s"></div>`});
+  pips+='</div>';
+
+  let h=pips;
+  h+=`<div class="tag" style="color:${s.color};background:${s.color}14">Step ${fwSlideIdx+1} of 4</div>`;
+  h+=`<div class="slide-in" style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+    <div style="width:56px;height:56px;border-radius:14px;background:${s.color};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+      <span style="font-size:30px;font-weight:800;color:var(--white);font-family:var(--heading)">${s.letter}</span>
+    </div>
+    <div><h2 style="font-size:clamp(22px,4vw,30px);font-weight:700;color:var(--charcoal);line-height:1.2;font-family:var(--heading);margin:0">${s.word}</h2>
+    <p style="font-size:15px;color:var(--mid);margin:4px 0 0">${s.front}</p></div>
+  </div>`;
+  h+=`<p style="font-size:16px;font-weight:600;color:var(--slate);margin-bottom:20px;line-height:1.6">${s.principle}</p>`;
+
+  // Reveal 1: Bad
+  if(!r.bad){
+    h+=`<div onclick="revealFw('bad')" class="glow" style="padding:14px 16px;border-radius:10px;border:2px dashed var(--red);background:var(--white);cursor:pointer;text-align:center;margin-bottom:10px">
+      <div style="font-size:14px;font-weight:700;color:var(--red)">Tap to see what NOT to say ↓</div></div>`;
+  } else {
+    h+=`<div class="slide-in" style="padding:12px 14px;border-radius:10px;background:var(--red-bg);border-left:3px solid var(--red);margin-bottom:10px">
+      <div style="font-size:11px;font-weight:700;color:var(--red);letter-spacing:1px;margin-bottom:3px">✗ NOT THIS</div>
+      <div style="font-size:15px;color:var(--slate);font-style:italic">${s.bad}</div>
+    </div>`;
+    // Dave hears (bad) — perspective flip
+    if(s.daveHears) h+=`<div class="slide-in" style="padding:10px 14px;border-radius:8px;background:#FDF2F0;border:1px dashed var(--red);margin-bottom:14px;display:flex;gap:8px;align-items:flex-start">
+      <div style="font-size:11px;font-weight:700;color:var(--red);white-space:nowrap;margin-top:2px">${ico('flip',14,'#C4392A')} DAVE HEARS:</div>
+      <div style="font-size:13px;color:var(--slate);font-style:italic;line-height:1.5">${s.daveHears.bad}</div>
+    </div>`;
+  }
+
+  // Reveal 2: Good
+  if(!r.bad){
+    h+=`<div style="padding:14px 16px;border-radius:10px;border:2px dashed var(--border);background:var(--white);text-align:center;margin-bottom:10px;opacity:0.35"><div style="font-size:14px;color:var(--light)">Reveal the bad example first</div></div>`;
+  } else if(!r.good){
+    h+=`<div onclick="revealFw('good')" class="glow" style="padding:14px 16px;border-radius:10px;border:2px dashed var(--green);background:var(--white);cursor:pointer;text-align:center;margin-bottom:10px">
+      <div style="font-size:14px;font-weight:700;color:var(--green)">Now tap to see the better version ↓</div></div>`;
+  } else {
+    h+=`<div class="slide-in" style="padding:12px 14px;border-radius:10px;background:var(--green-bg);border-left:3px solid var(--green);margin-bottom:10px">
+      <div style="font-size:11px;font-weight:700;color:var(--green);letter-spacing:1px;margin-bottom:3px">✓ THIS</div>
+      <div style="font-size:15px;color:var(--slate);font-style:italic">${s.good}</div>
+    </div>`;
+    if(s.daveHears) h+=`<div class="slide-in" style="padding:10px 14px;border-radius:8px;background:#EDF7F1;border:1px dashed var(--green);margin-bottom:14px;display:flex;gap:8px;align-items:flex-start">
+      <div style="font-size:11px;font-weight:700;color:var(--green);white-space:nowrap;margin-top:2px">${ico('flip',14,'#2D8659')} DAVE HEARS:</div>
+      <div style="font-size:13px;color:var(--slate);font-style:italic;line-height:1.5">${s.daveHears.good}</div>
+    </div>`;
+  }
+
+  // Reveal 3: Why
+  if(!r.good){
+    h+=`<div style="padding:14px 16px;border-radius:10px;border:2px dashed var(--border);background:var(--white);text-align:center;opacity:0.35"><div style="font-size:14px;color:var(--light)">Keep going</div></div>`;
+  } else if(!r.why){
+    h+=`<div onclick="revealFw('why')" class="glow" style="padding:14px 16px;border-radius:10px;border:2px dashed var(--amber);background:var(--white);cursor:pointer;text-align:center">
+      <div style="font-size:14px;font-weight:700;color:var(--amber)">Tap: why does this matter?</div></div>`;
+  } else {
+    h+=`<div class="slide-in" style="padding:12px 14px;border-radius:10px;background:var(--warm-grey);border-left:3px solid var(--amber)">
+      <div style="font-size:11px;font-weight:700;color:var(--amber);letter-spacing:1px;margin-bottom:3px">WHY IT MATTERS</div>
+      <div style="font-size:15px;line-height:1.7;color:var(--slate)">${s.why}</div>
+    </div>`;
+  }
+
+  if(allDone){
+    h+=`<div class="fade-in" style="margin-top:20px;text-align:center">`;
+    if(fwSlideIdx<fwSteps.length-1){const nx=fwSteps[fwSlideIdx+1];h+=`<button class="btn btn-primary" onclick="nextFwSlide()">Next: ${nx.word} →</button>`}
+    else h+=`<button class="btn btn-accent" onclick="goScreen(3)">Test if it stuck →</button>`;
+    h+=`</div>`;
+  }
+  c.innerHTML=h;
+}
+function revealFw(k){if(!fwReveals[fwSlideIdx])fwReveals[fwSlideIdx]={};fwReveals[fwSlideIdx][k]=true;renderFwSlide()}
+function nextFwSlide(){fwSlideIdx++;fwReveals[fwSlideIdx]={};renderFwSlide();window.scrollTo({top:0,behavior:'smooth'})}
+
+// ═══ SCREEN 3: ORDER RACE ═══
+function renderOrder(){
+  orderPlaced=[null,null,null,null];orderPool=['ask','next','observe','bridge'];orderChecked=false;
+  clearInterval(orderTimerInterval);orderElapsed=0;
+  const c=document.getElementById('orderContent');
+  c.innerHTML=`<div class="tag" style="color:var(--teal);background:#1B6B7D14">Speed Recall</div>
+    <h2 class="heading">Put OBAN in order — from memory.</h2>
+    <p style="font-size:14px;color:var(--mid);margin-bottom:8px">You've just learned all four steps. Now put them in the right order. Tap a step to place it in the next empty slot.</p>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+      <div style="font-size:13px;font-weight:700;color:var(--amber)">${ico('clock',16,'#D4922A')} <span id="orderTimer">0.0s</span></div>
+    </div>
+    <div id="orderSlots"></div>
+    <div id="orderPoolEl" style="margin-top:12px;margin-bottom:16px"></div>
+    <div id="orderActions" style="text-align:center"></div>
+    <div id="orderFeedback"></div>`;
+  renderOrderSlots();
+  orderStartTime=performance.now();
+  orderTimerInterval=setInterval(()=>{
+    orderElapsed=((performance.now()-orderStartTime)/1000);
+    const el=document.getElementById('orderTimer');
+    if(el)el.textContent=orderElapsed.toFixed(1)+'s';
+  },100);
+}
+
+function renderOrderSlots(){
+  const slots=document.getElementById('orderSlots');if(!slots)return;slots.innerHTML='';
+  orderPlaced.forEach((item,i)=>{
+    const div=document.createElement('div');
+    div.style.cssText=`padding:12px 14px;border-radius:10px;min-height:50px;border:2px ${item?'solid':'dashed'} ${item?orderColors[item]:'var(--border)'};background:${item?orderColors[item]+'08':'var(--white)'};display:flex;align-items:center;gap:10px;margin-bottom:8px;cursor:${item&&!orderChecked?'pointer':'default'};transition:all 0.2s`;
+    div.innerHTML=`<div style="width:28px;height:28px;border-radius:8px;background:${item?orderColors[item]:'var(--border)'};color:var(--white);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;font-family:var(--heading)">${item?orderLabels[item][0]:(i+1)}</div>
+      ${item?`<span style="font-size:15px;font-weight:600;color:var(--charcoal)">${orderLabels[item]}</span>`:'<span style="font-size:14px;color:var(--light);font-style:italic">—</span>'}`;
+    if(item&&!orderChecked)div.onclick=()=>{orderPlaced[i]=null;orderPool.push(item);renderOrderSlots();renderOrderPool()};
+    slots.appendChild(div);
+  });
+  // Auto-check when full
+  if(orderPlaced.every(p=>p!==null)&&!orderChecked)setTimeout(checkOrder,300);
+}
+
+function renderOrderPool(){
+  const pool=document.getElementById('orderPoolEl');if(!pool)return;pool.innerHTML='';
+  orderPool.forEach((item,i)=>{
+    const chip=document.createElement('span');chip.className='pool-chip';
+    chip.style.background=orderColors[item];chip.style.animation=`fadeUp 0.3s ease ${i*0.05}s both`;
+    chip.textContent=orderLabels[item];
+    chip.onclick=()=>{const idx=orderPlaced.indexOf(null);if(idx===-1)return;orderPlaced[idx]=item;orderPool=orderPool.filter(p=>p!==item);renderOrderSlots();renderOrderPool()};
+    pool.appendChild(chip);
+  });
+}
+
+function checkOrder(){
+  clearInterval(orderTimerInterval);orderChecked=true;
+  const correct=orderPlaced.every((p,i)=>p===orderCorrect[i]);
+  const slots=document.getElementById('orderSlots');slots.innerHTML='';
+  orderPlaced.forEach((item,i)=>{
+    const ok=item===orderCorrect[i];
+    const div=document.createElement('div');
+    div.style.cssText=`padding:12px 14px;border-radius:10px;border:2px solid ${ok?'var(--green)':'var(--red)'};background:${ok?'var(--green-bg)':'var(--red-bg)'};display:flex;align-items:center;gap:10px;margin-bottom:8px;animation:${ok?'fadeUp':'shake'} 0.4s ease ${i*0.1}s both`;
+    div.innerHTML=`<div style="width:28px;height:28px;border-radius:8px;background:${ok?'var(--green)':'var(--red)'};color:var(--white);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">${ok?'✓':'✗'}</div>
+      <span style="font-size:15px;font-weight:600;color:var(--charcoal)">${orderLabels[item]}</span>`;
+    slots.appendChild(div);
+  });
+  document.getElementById('orderPoolEl').innerHTML='';
+  const fb=document.getElementById('orderFeedback');
+  if(correct){
+    const timeStr=orderElapsed.toFixed(1);
+    const speed=orderElapsed<5?'Lightning fast.':orderElapsed<10?'Solid recall.':'You got there.';
+    fb.innerHTML=`<div class="fade-in" style="margin-top:14px">
+      <div style="text-align:center;margin-bottom:16px">
+        <div class="bounce-in" style="width:64px;height:64px;border-radius:50%;background:var(--green);color:var(--white);display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;font-family:var(--heading)">${timeStr}s</div>
+        <div style="font-size:14px;color:var(--green);font-weight:700;margin-top:6px">${speed}</div>
+      </div>
+      <div style="padding:14px;background:var(--green-bg);border-radius:8px;font-size:14px;color:var(--slate);line-height:1.6">
+        <strong style="color:var(--green)">Observe → Bridge → Ask → Next.</strong> You've got the sequence. Now let's see if you can use it when someone's looking at you and waiting for an answer.
+      </div>
+      <div style="text-align:center;margin-top:14px"><button class="btn btn-accent" onclick="goScreen(4)">Put me under pressure →</button></div>
+    </div>`;
+  } else {
+    fb.innerHTML=`<div class="fade-in" style="margin-top:14px">
+      <div style="padding:14px;background:var(--red-bg);border-radius:8px;font-size:14px;color:var(--slate);line-height:1.6">Not quite — you need <strong>facts</strong> before <strong>impact</strong>, and you need to <strong>ask</strong> before you agree a <strong>next step</strong>.</div>
+      <div style="text-align:center;margin-top:14px"><button class="btn btn-secondary" onclick="renderOrder()">Try again</button></div>
+    </div>`;
+  }
+}
+
+// ═══ SCREEN 4: LIVE SCENARIO ═══
+function renderScenario(){
+  scenarioPicked=null;
+  const s=scenarios[scenarioStage];
+  const c=document.getElementById('scenarioContent');
+  timerValue=s.time;
+
+  let h=`<div id="scTimerBar" style="height:4px;background:var(--border);border-radius:2px;margin-bottom:14px;overflow:hidden"><div id="scTimerFill" style="height:100%;width:100%;border-radius:2px;background:var(--teal);transition:width 1s linear,background 0.3s"></div></div>`;
+  h+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+    <div class="tag" style="color:var(--teal-dk);background:#0F4F5E14">Live Scenario</div>
+    <span style="font-size:12px;color:var(--mid)">Part ${scenarioStage+1}/${scenarios.length}</span>
+    <span id="scTimerDisplay" style="margin-left:auto;display:flex;align-items:center;gap:4px">${ico('clock',14,'#6E868F')}<span id="scTimerCount" style="font-size:15px;font-weight:700;color:var(--mid);font-variant-numeric:tabular-nums">${s.time}s</span></span>
+  </div>`;
+  h+=`<div style="font-size:13px;color:var(--mid);margin-bottom:4px">${s.scene}</div>`;
+  h+=`<p style="font-size:15px;line-height:1.7;color:var(--slate);margin-bottom:10px">${s.text}</p>`;
+  h+=`<h2 class="heading-sm">${s.prompt}</h2>`;
+  h+=`<div id="scTimeout" style="display:none"></div>`;
+  h+=`<div id="scOptions" style="margin-top:12px"></div>`;
+  h+=`<div id="scNext" style="display:none;margin-top:16px;text-align:center"></div>`;
+  c.innerHTML=h;
+
+  renderScOptions(s);
+
+  clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{
+    timerValue--;
+    const pct=(timerValue/s.time)*100;
+    const fill=document.getElementById('scTimerFill');
+    const count=document.getElementById('scTimerCount');
+    const overlay=document.getElementById('dangerOverlay');
+    if(fill){fill.style.width=pct+'%';fill.style.background=pct>30?'var(--teal)':pct>15?'var(--amber)':'var(--red)'}
+    if(count){count.textContent=timerValue+'s';count.style.color=timerValue<=5?'var(--red)':'var(--mid)';if(timerValue<=5)count.classList.add('pulse-text');else count.classList.remove('pulse-text')}
+    // Danger overlay
+    if(overlay&&timerValue<=5)overlay.style.background=`rgba(200,58,46,${(5-timerValue)*0.03})`;
+    if(timerValue<=0){
+      clearInterval(timerInterval);
+      if(overlay)overlay.style.background='transparent';
+      const td=document.getElementById('scTimerDisplay');if(td)td.style.display='none';
+      if(!scenarioPicked){
+        const to=document.getElementById('scTimeout');to.style.display='block';
+        to.innerHTML=`<div class="shake" style="padding:12px;background:var(--amber-pale);border:1px solid var(--amber-lt);border-radius:8px;margin-bottom:12px;font-size:13px;color:var(--slate);text-align:center;display:flex;align-items:center;justify-content:center;gap:6px">
+          ${ico('clock',14,'#D4922A')} Time's up — the moment passed. Pick what you would have said.
+        </div>`;
+      }
+    }
+  },1000);
+}
+
+function renderScOptions(s){
+  const c=document.getElementById('scOptions');c.innerHTML='';
+  s.options.forEach((o,i)=>{
+    const div=document.createElement('div');div.className='opt-card'+(scenarioPicked?' revealed':'');
+    let bg='var(--white)',bdr='var(--border)',op='1';
+    if(scenarioPicked){
+      if(o.type==='strong'){bg='var(--green-bg)';bdr='var(--green)'}
+      else if(scenarioPicked===o.id&&o.type==='bad'){bg='var(--red-bg)';bdr='var(--red)'}
+      else if(scenarioPicked===o.id&&o.type==='partial'){bg='var(--amber-pale)';bdr='var(--amber)'}
+      if(scenarioPicked!==o.id&&o.type!=='strong')op='0.35';
+    }
+    div.style.cssText=`border-color:${bdr};background:${bg};opacity:${op}`;
+    if(!scenarioPicked)div.style.animation=`fadeUp 0.3s ease ${i*0.06}s both`;
+    const iconCol=scenarioPicked&&o.type==='strong'?'#2D8659':scenarioPicked&&scenarioPicked===o.id&&o.type==='bad'?'#C4392A':'var(--slate)';
+    const iconBg=scenarioPicked&&o.type==='strong'?'#2D865914':scenarioPicked&&scenarioPicked===o.id?bdr+'14':'#1B6B7D08';
+    let html=`<div style="display:flex;gap:12px;align-items:center"><div style="width:32px;height:32px;border-radius:8px;background:${iconBg};display:flex;align-items:center;justify-content:center;flex-shrink:0">${ico(o.icon,18,iconCol)}</div><span style="font-size:15px;font-weight:600;color:var(--charcoal)">${o.text}</span></div>`;
+    if(scenarioPicked&&(scenarioPicked===o.id||o.type==='strong')){
+      const lbl=o.type==='strong'?'Strong':o.type==='partial'?'Partial':'Risky';
+      const lc=o.type==='strong'?'var(--green)':o.type==='partial'?'var(--amber)':'var(--red)';
+      html+=`<div style="margin-top:8px;padding-left:44px;font-size:14px;line-height:1.65;color:var(--slate)"><span style="font-weight:700;color:${lc}">${lbl} — </span>${o.fb}</div>`;
+    }
+    div.innerHTML=html;
+    if(!scenarioPicked)div.onclick=()=>pickSc(o.id,s);
+    c.appendChild(div);
+  });
+}
+
+function pickSc(id,s){
+  if(scenarioPicked)return;
+  clearInterval(timerInterval);
+  document.getElementById('dangerOverlay').style.background='transparent';
+  scenarioPicked=id;scenarioChoices.push(id);
+  const td=document.getElementById('scTimerDisplay');if(td)td.style.display='none';
+  document.getElementById('scTimerBar').style.display='none';
+  renderScOptions(s||scenarios[scenarioStage]);
+  const nx=document.getElementById('scNext');nx.style.display='block';
+  const isLast=scenarioStage>=scenarios.length-1;
+  nx.innerHTML=`<div class="fade-in"><button class="btn btn-primary" onclick="${isLast?'goScreen(5)':'nextScStage()'}">
+    ${isLast?'See my results →':'Next situation →'}</button></div>`;
+}
+function nextScStage(){scenarioStage++;renderScenario();window.scrollTo({top:0})}
+
+// ═══ SCREEN 5: PERSONAL DEBRIEF ═══
+function renderDebrief(){
+  const strong=[scenarioChoices[0]==='oban',scenarioChoices[1]==='system'].filter(Boolean).length;
+  const inst=instincts.find(i=>i.id===instinctPicked);
+  const v=strong>=2
+    ?{title:'You held the line. Twice.',desc:"Under pressure, you chose honesty over comfort and systems thinking over blame.",grade:'A'}
+    :strong===1
+    ?{title:'Good instincts on one. Defaulted on the other.',desc:"The gap between knowing the framework and using it under pressure — that's exactly what this programme closes.",grade:'B'}
+    :{title:'Under pressure, you defaulted to comfort.',desc:"That's normal. OBAN gives you a structure so you don't have to improvise when the pressure hits.",grade:'C'};
+
+  const scoreBg=strong===2?'var(--green)':strong===1?'var(--amber)':'var(--red)';
+  const tasks=['Write your Observe (facts only)','Plan your Bridge (why it matters to them)','Prepare your Ask (genuine question)','Have the conversation','Reflect: what surprised you?'];
+
+  let h=`<div class="fade-in" style="text-align:center;margin-bottom:24px">
+    <div class="bounce-in" style="width:80px;height:80px;border-radius:50%;background:${scoreBg};color:var(--white);display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;margin:0 auto 14px">${strong}/2</div>
+    <h2 style="font-size:24px;font-weight:700;color:var(--charcoal);line-height:1.3;font-family:var(--heading)">${v.title}</h2>
+    <p style="font-size:15px;color:var(--mid);line-height:1.6;margin-top:6px;max-width:420px;margin-left:auto;margin-right:auto">${v.desc}</p>
+  </div>`;
+
+  // Personal profile
+  if(inst){
+    h+=`<div class="slide-in" style="padding:14px 16px;background:var(--warm-grey);border-radius:10px;margin-bottom:16px;border-left:3px solid ${inst.color}">
+      <div style="font-size:12px;font-weight:700;color:${inst.color};letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Your Leadership Profile</div>
+      <p style="font-size:14px;line-height:1.6;color:var(--slate);margin:0"><strong>Default instinct:</strong> ${inst.pattern}. <strong>Under pressure:</strong> you ${strong>=2?'overrode your default and led with OBAN thinking':strong===1?'held the line once but reverted once':'fell back on instinct both times'}. ${strong<2?"That's the gap this programme is designed to close.":"That's the foundation to build on."}</p>
+    </div>`;
+  }
+
+  // OBAN recap
+  h+=`<div style="padding:16px;background:var(--white);border:1px solid var(--border);border-radius:10px;margin-bottom:16px">
+    <div style="font-size:12px;font-weight:700;color:var(--teal);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">The Framework</div>
+    <div style="display:flex;gap:6px">${[{l:'O',w:'Observe',c:'#1B6B7D'},{l:'B',w:'Bridge',c:'#2A8A9E'},{l:'A',w:'Ask',c:'#D4922A'},{l:'N',w:'Next',c:'#2D8659'}].map(s=>`<div style="flex:1;text-align:center;padding:10px 4px;background:${s.c}0a;border-radius:8px;border:1px solid ${s.c}18"><div style="font-size:22px;font-weight:800;color:${s.c};font-family:var(--heading)">${s.l}</div><div style="font-size:11px;color:var(--slate);font-weight:600;margin-top:2px">${s.w}</div></div>`).join('')}</div>
+  </div>`;
+
+  // Plant task
+  h+=`<div style="padding:16px 18px;background:var(--teal-wash);border:1px solid var(--border);border-radius:10px;margin-bottom:16px">
+    <div style="font-size:12px;font-weight:700;color:var(--teal);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Your Plant Task</div>
+    <p style="font-size:15px;line-height:1.7;color:var(--slate);margin:0 0 12px">Before the next live session: have <strong>one real OBAN conversation</strong>. Start moderate — something that's been sitting for a couple of weeks.</p>
+    ${tasks.map((t,i)=>`<div style="display:flex;gap:8px;align-items:center;margin-bottom:5px"><div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--teal);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--teal);flex-shrink:0">${i+1}</div><span style="font-size:13px;color:var(--slate)">${t}</span></div>`).join('')}
+  </div>`;
+
+  h+=`<div style="text-align:center;margin-top:4px"><button class="btn btn-primary" onclick="goScreen(6)">Continue →</button></div>`;
+
+  document.getElementById('debriefContent').innerHTML=h;
+}
+
+function restartAll(){
+  instinctPicked=null;fwSlideIdx=0;fwReveals={};
+  orderPlaced=[null,null,null,null];orderPool=['ask','next','observe','bridge'];orderChecked=false;
+  scenarioStage=0;scenarioPicked=null;scenarioChoices=[];
+  screenHistory=[0];
+  clearInterval(timerInterval);clearInterval(orderTimerInterval);
+  goScreen(0);
+  ['open1','open2','open3'].forEach(id=>{const el=document.getElementById(id);el.style.opacity='0';el.style.transform='translateY(8px)'});
+  ['bridge1','bridge2','bridge3','bridge4'].forEach(id=>{const el=document.getElementById(id);if(el){el.style.opacity='0';el.style.transform='translateY(8px)'}});
+  ['nx1','nx2','nx3','nx4'].forEach(id=>{const el=document.getElementById(id);if(el){el.style.opacity='0';el.style.transform='translateY(8px)'}});
+  const sb=document.getElementById('scene1Btn');if(sb){sb.style.opacity='0';sb.style.transform='translateY(8px)'}
+  setTimeout(()=>{document.getElementById('open1').style.opacity='1';document.getElementById('open1').style.transform='none'},400);
+  setTimeout(()=>{document.getElementById('open2').style.opacity='1';document.getElementById('open2').style.transform='none'},1800);
+  setTimeout(()=>{document.getElementById('open3').style.opacity='1';document.getElementById('open3').style.transform='none'},3400);
+}
+
+// Init
+updateDots();
+// Also render order pool on first load of screen 3
+const origRenderOrder=renderOrder;
+renderOrder=function(){origRenderOrder();renderOrderPool()};
+</script>
+</body>
+</html>
