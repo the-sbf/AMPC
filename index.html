@@ -585,8 +585,17 @@ const fwSteps = [
 ];
 
 const orderCorrect = ['observe','bridge','ask','next'];
-const orderLabels = {observe:'Observe',bridge:'Bridge',ask:'Ask',next:'Next Step'};
-const orderColors = {observe:'#1B6B7D',bridge:'#2A8A9E',ask:'#D4922A',next:'#2D8659'};
+const orderLabels = {observe:'Observe',bridge:'Bridge',ask:'Ask',next:'Next Step',lecture:'Explain',consequence:'Warn'};
+const orderActions = {
+  observe:'State the facts you saw',
+  bridge:'Connect to what they care about',
+  ask:'Ask a real question — and listen',
+  next:'Agree one concrete next step',
+  lecture:'Explain your reasoning',
+  consequence:'Spell out the consequence'
+};
+const orderColors = {observe:'#1B6B7D',bridge:'#2A8A9E',ask:'#D4922A',next:'#2D8659',lecture:'#7A8794',consequence:'#7A8794'};
+const orderDistractors = ['lecture','consequence'];
 
 const scenarios = [
   {scene:'Monday 6:20am · Boning room',text:"A team leader pulls you aside. Friday afternoon, a pallet shifted off a forklift — nobody hit, but two workers were standing there 30 seconds earlier. No report filed.",prompt:'"Can we sort this quietly? He\'s a good bloke. Nobody got hurt."',time:15,
@@ -801,7 +810,10 @@ function jumpFw(i){if(i>fwSlideIdx)return;fwSlideIdx=i;renderFwSlide()}
 
 // ═══ SCREEN 3: ORDER RACE ═══
 function renderOrder(){
-  orderPlaced=[null,null,null,null];orderPool=['ask','next','observe','bridge'];orderChecked=false;
+  orderPlaced=[null,null,null,null];
+  orderPool=['ask','next','observe','bridge',...orderDistractors]
+    .map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(p=>p[1]);
+  orderChecked=false;
   clearInterval(orderTimerInterval);orderElapsed=0;
   const c=document.getElementById('orderContent');
   c.innerHTML=`
@@ -810,13 +822,13 @@ function renderOrder(){
       <div>
         <div class="tag" style="color:var(--teal);background:#1B6B7D14">Speed Recall</div>
         <h2 class="heading" style="margin-bottom:6px">Put OBAN in order — from memory.</h2>
-        <p style="font-size:14.5px;color:var(--mid);max-width:54ch;line-height:1.6">You've just learned all four steps. Drag each step from the right into the slots on the left in order. Tap a placed step to remove it.</p>
+        <p style="font-size:14.5px;color:var(--mid);max-width:54ch;line-height:1.6">Six actions below — only four belong to OBAN. Drag the right four into the slots, in order. Tap a placed step to remove it.</p>
       </div>
       <div class="order-slots" id="orderSlots"></div>
     </div>
     <div class="order-right">
-      <h3>The four steps</h3>
-      <div style="font-size:13px;color:var(--mid);margin-bottom:6px">Drag into a slot on the left</div>
+      <h3>Six actions — pick four</h3>
+      <div style="font-size:13px;color:var(--mid);margin-bottom:6px">Two of these aren't OBAN. Drag into a slot on the left.</div>
       <div class="pool" id="orderPoolEl"></div>
       <div class="timer-row">
         <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mid);font-weight:700">Time</div>
@@ -844,8 +856,8 @@ function renderOrderSlots(){
     div.dataset.slotIdx=i;
     if(item)div.style.setProperty('--c',orderColors[item]);
     if(item&&!orderChecked)div.style.borderColor=orderColors[item];
-    div.innerHTML=`<div class="num">${item?(orderChecked?(item===orderCorrect[i]?'✓':'✗'):orderLabels[item][0]):(i+1)}</div>
-      <div class="ol-text">${item?orderLabels[item]:'— empty —'}</div>`;
+    div.innerHTML=`<div class="num">${item?(orderChecked?(item===orderCorrect[i]?'✓':'✗'):(orderCorrect.includes(item)?orderLabels[item][0]:'?')):(i+1)}</div>
+      <div class="ol-text">${item?orderActions[item]:'— empty —'}</div>`;
     if(item&&!orderChecked)div.onclick=()=>{orderPlaced[i]=null;orderPool.push(item);renderOrderSlots();renderOrderPool()};
     slots.appendChild(div);
   });
@@ -857,7 +869,7 @@ function renderOrderPool(){
   orderPool.forEach((item,i)=>{
     const chip=document.createElement('span');chip.className='pool-chip';
     chip.style.background=orderColors[item];chip.style.animation=`fadeUp 0.3s ease ${i*0.05}s both`;
-    chip.textContent=orderLabels[item];
+    chip.textContent=orderActions[item];
     attachChipDrag(chip,item);
     pool.appendChild(chip);
   });
@@ -956,7 +968,7 @@ function checkOrder(){
     </div>`;
   } else {
     fb.innerHTML=`<div class="fade-in" style="margin-top:14px">
-      <div style="padding:14px;background:var(--red-bg);border-radius:10px;font-size:14px;color:var(--slate);line-height:1.6;margin-bottom:14px">Not quite — facts come <strong>before</strong> impact, and you ask <strong>before</strong> agreeing a next step.</div>
+      <div style="padding:14px;background:var(--red-bg);border-radius:10px;font-size:14px;color:var(--slate);line-height:1.6;margin-bottom:14px">Not quite. Two of the six don't belong — <em>explaining your reasoning</em> and <em>spelling out the consequence</em> are instincts OBAN replaces. And the order matters: facts come <strong>before</strong> impact, and you ask <strong>before</strong> agreeing a next step.</div>
       <div style="text-align:center"><button class="btn btn-secondary" onclick="renderOrder()">Try again</button></div>
     </div>`;
   }
@@ -1118,7 +1130,10 @@ function renderDebrief(){
 
 function restartAll(){
   instinctPicked=null;fwSlideIdx=0;fwReveals={};
-  orderPlaced=[null,null,null,null];orderPool=['ask','next','observe','bridge'];orderChecked=false;
+  orderPlaced=[null,null,null,null];
+  orderPool=['ask','next','observe','bridge',...orderDistractors]
+    .map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(p=>p[1]);
+  orderChecked=false;
   scenarioStage=0;scenarioPicked=null;scenarioChoices=[];
   screenHistory=[0];
   clearInterval(timerInterval);clearInterval(orderTimerInterval);
