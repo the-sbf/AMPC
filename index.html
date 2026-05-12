@@ -945,6 +945,14 @@ function findSlotAt(x,y){
   return null;
 }
 
+function orderFailMessage(){
+  const placed=orderPlaced.filter(Boolean);
+  const hasDistractor=placed.some(p=>orderDistractors.includes(p));
+  const allFourCorrect=orderCorrect.every(c=>placed.includes(c));
+  if(hasDistractor&&!allFourCorrect)return `Not quite. One or more of those actions isn't OBAN — watch for the instinct moves (<em>explain</em>, <em>warn</em>) that sneak in. Try again with just the four OBAN steps.`;
+  if(allFourCorrect)return `Right four, wrong order. Facts come <strong>before</strong> impact, and you ask <strong>before</strong> agreeing a next step.`;
+  return `Not quite — review the four OBAN steps and the order they go in.`;
+}
 function checkOrder(){
   clearInterval(orderTimerInterval);orderChecked=true;
   const correct=orderPlaced.every((p,i)=>p===orderCorrect[i]);
@@ -968,7 +976,7 @@ function checkOrder(){
     </div>`;
   } else {
     fb.innerHTML=`<div class="fade-in" style="margin-top:14px">
-      <div style="padding:14px;background:var(--red-bg);border-radius:10px;font-size:14px;color:var(--slate);line-height:1.6;margin-bottom:14px">Not quite. Two of the six don't belong — <em>explaining your reasoning</em> and <em>spelling out the consequence</em> are instincts OBAN replaces. And the order matters: facts come <strong>before</strong> impact, and you ask <strong>before</strong> agreeing a next step.</div>
+      <div style="padding:14px;background:var(--red-bg);border-radius:10px;font-size:14px;color:var(--slate);line-height:1.6;margin-bottom:14px">${orderFailMessage()}</div>
       <div style="text-align:center"><button class="btn btn-secondary" onclick="renderOrder()">Try again</button></div>
     </div>`;
   }
